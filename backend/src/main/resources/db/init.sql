@@ -40,7 +40,7 @@ INSERT INTO tdclassroom.personne (
 )
 VALUES (
     'John', 'Doe', '1985-07-20', 'johndoe@example.com', 'CIN123456', '0612345678',
-    'professeur', '123 Main St', 'Oujda', '12345', 'administrateur', 'Banque XYZ',
+    'PROFESSEUR', '123 Main St', 'Oujda', '12345', 'ADMINISTRATEUR', 'Banque XYZ',
     'SOM12345', '$2a$12$gTMxTDPGlqZ5haOhQ.CXsuGWEYfuG2YumvnoO/UA54eXzfgsYowTS', 1
 ); -- the password is 'admin'
 

@@ -28,10 +28,15 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/tdclassroom
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"  # Enable DevTools
+      SPRING_DEVTOOLS_LIVERELOAD_ENABLED: "true"
+    volumes:
+      - ./backend/src:/app/src  # Mount source code for live reload
+      - ./backend/target:/app/target  # Mount compiled files
+      - ~/.m2:/root/.m2  # Cache Maven dependencies
     depends_on:
       database:
         condition: service_healthy
-
     networks:
       - backend-database
 

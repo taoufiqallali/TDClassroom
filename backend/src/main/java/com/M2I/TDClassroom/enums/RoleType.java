@@ -1,6 +1,6 @@
 package com.M2I.TDClassroom.enums;
 
 public enum RoleType {
-    Admin,
-    Personne
+    ADMIN,
+    PERSONNE
 }
