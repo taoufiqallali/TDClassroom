@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS tdclassroom;
 
 CREATE TABLE tdclassroom.personne (
-    personne_id INT PRIMARY KEY AUTO_INCREMENT,
+    personne_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     date_naissance DATE NOT NULL,
@@ -20,32 +20,51 @@ CREATE TABLE tdclassroom.personne (
     id_unite INT NOT NULL
 );
 CREATE TABLE tdclassroom.role (
-    role_id INT PRIMARY KEY AUTO_INCREMENT,
+    role_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     role_nom VARCHAR(50) NOT NULL
+
 );
 
 
 CREATE TABLE tdclassroom.personne_role (
-    role_id INT,
-    personne_id INT,
+    role_id BIGINT,
+    personne_id BIGINT,
     FOREIGN KEY (role_id) REFERENCES role(role_id),
     FOREIGN KEY (personne_id) REFERENCES personne(personne_id),
     PRIMARY KEY (role_id, personne_id)
 );
 
+INSERT INTO tdclassroom.personne (
+    nom, prenom, date_naissance, email, CIN, tel, grade, address, ville,
+    code_postale, responsabilite, nom_banque, SOM, mot_de_passe, id_unite
+)
+VALUES (
+    'John', 'Doe', '1985-07-20', 'johndoe@example.com', 'CIN123456', '0612345678',
+    'professeur', '123 Main St', 'Oujda', '12345', 'administrateur', 'Banque XYZ',
+    'SOM12345', '$2a$12$gTMxTDPGlqZ5haOhQ.CXsuGWEYfuG2YumvnoO/UA54eXzfgsYowTS', 1
+); -- the password is 'admin'
+
+
+INSERT INTO tdclassroom.role (role_nom) VALUES ('ADMIN'), ('PERSONNE');
+
+INSERT INTO tdclassroom.personne_role (personne_id, role_id)
+VALUES (1, 1);
+
+
+
 CREATE TABLE tdclassroom.unite_organisation (
-    id_unite INT PRIMARY KEY AUTO_INCREMENT,
+    id_unite BIGINT PRIMARY KEY AUTO_INCREMENT,
     type VARCHAR(50) NOT NULL,
     nom VARCHAR(100) NOT NULL UNIQUE,
-    id_chef INT,
-    id_adjoint INT,
+    id_chef BIGINT,
+    id_adjoint BIGINT,
     FOREIGN KEY (id_chef) REFERENCES personne(personne_id),
     FOREIGN KEY (id_adjoint) REFERENCES personne(personne_id)
 );
 
 CREATE TABLE tdclassroom.local(
-    id_local INT PRIMARY KEY AUTO_INCREMENT,
-    id_unite INT,
+    id_local BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id_unite BIGINT,
     nom VARCHAR(100) NOT NULL,
     capacite INT NOT NULL,
     accessibilite_pmr BOOLEAN NOT NULL,
@@ -53,23 +72,23 @@ CREATE TABLE tdclassroom.local(
 );
 
 CREATE TABLE tdclassroom.equipement (
-    id_equipement INT PRIMARY KEY AUTO_INCREMENT,
+    id_equipement BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     description TEXT NOT NULL
 );
 
 CREATE TABLE tdclassroom.local_equipement (
-    id_local INT,
-    id_equipement INT,
+    id_local BIGINT,
+    id_equipement BIGINT,
     FOREIGN KEY (id_local) REFERENCES local(id_local),
     FOREIGN KEY (id_equipement) REFERENCES equipement(id_equipement),
     PRIMARY KEY (id_local, id_equipement)
 );
 
 CREATE TABLE tdclassroom.reservation (
-    id_reservation INT PRIMARY KEY AUTO_INCREMENT,
-    id_utilisateur INT,
-    id_local INT,
+    id_reservation BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id_utilisateur BIGINT,
+    id_local BIGINT,
     date_reservation DATE NOT NULL,
     heure_reservation TIME NOT NULL,
     duree INT NOT NULL,
@@ -79,9 +98,9 @@ CREATE TABLE tdclassroom.reservation (
 );
 
 CREATE TABLE tdclassroom.notification (
-    id_notification INT PRIMARY KEY AUTO_INCREMENT,
-    id_personne INT,
-    id_reservation INT,
+    id_notification BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id_personne BIGINT,
+    id_reservation BIGINT,
     type ENUM('pending', 'declined', 'accepted', 'cancelled') NOT NULL,
     message TEXT NOT NULL,
     status ENUM('unread', 'read') DEFAULT 'unread',

@@ -1,12 +1,39 @@
 version: "3.9"
 services:
+  database:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: "tdclassroom"
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - ./backend/src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql  # Persistent volume for MySQL data
+    networks:
+      - backend-database
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+
   backend:
     build:
       context: ./backend
     ports:
       - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/tdclassroom
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+
+    networks:
+      - backend-database
 
   frontend:
     build:
@@ -16,16 +43,9 @@ services:
     depends_on:
       - backend
 
-  database:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "root"
-    volumes:
-      - ./backend/src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - mysql_data:/var/lib/mysql  # Persistent volume for MySQL data
-    ports:
-      - "3307:3306"
+networks:
+  backend-database:
+    driver: bridge
 
 volumes:
   mysql_data:   # Declare the volume
