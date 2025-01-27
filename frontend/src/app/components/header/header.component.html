@@ -1,2 +1,20 @@
-<div class=""></div>
-<p>yaay header works!</p>
+<header class="header">
+  <div class="logo">
+    <img src="images/logo.png" alt="Logo" />
+  </div>
+
+  <div class="datetime">
+    <span>{{ currentDate | date:'short' }}</span>
+  </div>
+ 
+  <div class="user-profile" (click)="toggleDropdown()">
+    <div class="user-icon">
+      <img src="images/user-icon.png" alt="User" />
+    </div>
+    <div *ngIf="dropdownVisible" class="dropdown">
+      <p>{{ username }}</p>
+      <a routerLink="/settings">User Settings</a>
+      <button (click)="disconnect($event)">Disconnect</button>
+    </div>
+  </div>
+</header>
