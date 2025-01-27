@@ -14,12 +14,9 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    @Autowired
     PersonneRepository personneRepository;
 
-    @Autowired
-    public CustomUserDetailsService(PersonneRepository personneRepository){
-        this.personneRepository = personneRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username){
@@ -33,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             return User.builder()
                     .username(personne.getEmail())
                     .password(personne.getMotDePasse()) // Ensure this is a BCrypt-encoded password
-                    .roles(personne.getRoles().toArray(new String[0]))
+                    .roles(personne.getRoles().stream().map(role -> role.getRoleNom().name()).toArray(String[]::new))
                     .build();
 
         }else{
