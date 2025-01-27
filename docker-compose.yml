@@ -39,6 +39,9 @@ services:
       context: ./frontend
     ports:
       - "4201:4200"
+    volumes:
+      - ./frontend/:/app  # Mount your Angular project into /app
+      - /app/node_modules  # Prevent overwriting `node_modules`
     depends_on:
       - backend
 
