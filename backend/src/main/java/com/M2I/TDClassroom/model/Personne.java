@@ -1,5 +1,6 @@
 package com.M2I.TDClassroom.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -64,8 +65,10 @@ public class Personne {
     @Column(name = "mot_de_passe", nullable = false)
     private String motDePasse;
 
-    @Column(name = "id_unite", nullable = false)
-    private Integer idUnite;
+    @ManyToOne
+    @JoinColumn(name = "id_unite")
+    @JsonBackReference
+    private UniteOrganisation uniteOrganisation;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

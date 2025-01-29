@@ -34,10 +34,10 @@ public class LocalService {
 
     public Local updateLocal(Long id, Local updatedLocal) {
         return localRepository.findById(id).map(local -> {
-            local.setIdUnite(updatedLocal.getIdUnite());
+            local.setUniteOrganisation(updatedLocal.getUniteOrganisation());
             local.setNom(updatedLocal.getNom());
             local.setCapacite(updatedLocal.getCapacite());
-            local.setAccessibilitePmr(updatedLocal.getAccessibilitePmr());
+            local.setAccessibilitePmr(updatedLocal.isAccessibilitePmr());
             return localRepository.save(local);
         }).orElseThrow(() -> new RuntimeException("Local not found with id: " + id));
     }

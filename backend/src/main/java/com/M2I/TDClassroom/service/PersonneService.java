@@ -57,7 +57,7 @@ public class PersonneService {
         existingPersonne.setResponsabilite(updatedPersonne.getResponsabilite());
         existingPersonne.setNomBanque(updatedPersonne.getNomBanque());
         existingPersonne.setSom(updatedPersonne.getSom());
-        existingPersonne.setIdUnite(updatedPersonne.getIdUnite());
+        existingPersonne.setUniteOrganisation(updatedPersonne.getUniteOrganisation());
         existingPersonne.setRoles(updatedPersonne.getRoles());
 
         // Encode password only if it's changed

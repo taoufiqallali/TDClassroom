@@ -6,25 +6,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Local")
+@Table(name = "local")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Local {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_local")
     private Long idLocal;
 
-    @Column(name = "id_unite", nullable = false)
-    private Long idUnite;
+    @ManyToOne
+    @JoinColumn(name = "id_unite", nullable = false)
+    private UniteOrganisation uniteOrganisation;
 
     @Column(name = "nom", nullable = false, length = 100)
     private String nom;
 
     @Column(name = "capacite", nullable = false)
-    private Integer capacite;
+    private int capacite;
 
     @Column(name = "accessibilite_pmr", nullable = false)
-    private Boolean accessibilitePmr;
+    private boolean accessibilitePmr;
 }
