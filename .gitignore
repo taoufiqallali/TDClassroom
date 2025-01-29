@@ -1,5 +1,5 @@
 data/mysql_data/mysql.sock
-data/mysql_data/*
+
 
 # Angular specific files
 node_modules/
