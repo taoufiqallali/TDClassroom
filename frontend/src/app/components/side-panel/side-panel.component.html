@@ -1,0 +1,9 @@
+<div class="side-panel">
+    <div class="side-panel-buttons">
+      <app-dash-button *ngFor="let btn of buttons"
+      [iconSrc]="btn.iconSrc"
+      [description]="btn.description"
+      [altsrc]="btn.altsrc"
+      (click)="submitSelection(btn.description)"></app-dash-button>
+    </div>
+  </div>

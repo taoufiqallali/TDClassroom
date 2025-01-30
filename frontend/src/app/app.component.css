@@ -1,0 +1,8 @@
+body{background-color: rgb(131, 122, 122);}
+.butt {
+  display: flex;
+  justify-content: center; /* Horizontally center */
+  align-items: center;     /* Vertically center */
+  height: 100vh;
+  }
+  

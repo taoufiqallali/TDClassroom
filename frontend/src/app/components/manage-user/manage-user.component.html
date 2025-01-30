@@ -1,0 +1,51 @@
+<div class="hud"><app-admin-hud></app-admin-hud></div>
+<div class="content">
+    <div class="white-box">
+        <nav>
+          <button (click)="currentTab = 1" [class.active]="currentTab === 1">liste des utilisateurs</button>
+          <div class="right-buttons">
+            <button (click)="add_user()">ajouter <img class="plus-icon" src="images/plus-icon.png"></button>
+          </div>
+        </nav>
+       
+        <div [ngSwitch]="currentTab">
+          <div *ngSwitchCase="1">
+            
+            <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Prénom</th>
+                      <th>Email</th>
+                      <th>Téléphone</th>
+                      <th>Grade</th>
+                      <th>action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for(user of users; track user.email) {
+                      <tr>
+                        <td>{{user.nom}}</td>
+                        <td>{{user.prenom}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.tel}}</td>
+                        <td>{{user.grade}}</td>
+                        <td>
+                            <button (click)="editUser(user)">Modifier</button> <!-- Modifier button -->
+                            <button (click)="deleteUser(user)">Supprimer</button> <!-- Supprimer button -->
+                          </td>
+                        
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+
+          </div>
+        </div>
+      </div>
+    
+      <div class="user-form" *ngIf="isVisible" (click)="$event.stopPropagation()"><button (click)="closeItem()"><img src="images/close.png" alt="Close" class="close-icon" (click)="closeItem()"></button><app-user-form [userId]="operation_type"></app-user-form></div>
+</div>

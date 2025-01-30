@@ -1,0 +1,99 @@
+<div class="form-container">
+    <h2>{{ isEditMode ? 'Edit User' : 'Create New User' }}</h2>
+    
+    @if (errorMessage) {
+      <div class="error-message">{{ errorMessage }}</div>
+    }
+  
+    <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input 
+          type="text" 
+          id="nom" 
+          name="nom" 
+          [(ngModel)]="user.nom" 
+          required
+          #nom="ngModel"
+          class="form-control">
+        @if (submitted && nom.invalid) {
+          <div class="error">Nom is required</div>
+        }
+      </div>
+  
+      <div class="form-group">
+        <label for="prenom">Prénom</label>
+        <input 
+          type="text" 
+          id="prenom" 
+          name="prenom" 
+          [(ngModel)]="user.prenom" 
+          required
+          #prenom="ngModel"
+          class="form-control">
+        @if (submitted && prenom.invalid) {
+          <div class="error">Prénom is required</div>
+        }
+      </div>
+  
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          [(ngModel)]="user.email" 
+          required 
+          email
+          #email="ngModel"
+          class="form-control">
+        @if (submitted && email.invalid) {
+          <div class="error">Valid email is required</div>
+        }
+      </div>
+  
+      <div class="form-group">
+        <label for="tel">Téléphone</label>
+        <input 
+          type="tel" 
+          id="tel" 
+          name="tel" 
+          [(ngModel)]="user.tel" 
+          required
+          #tel="ngModel"
+          class="form-control">
+        @if (submitted && tel.invalid) {
+          <div class="error">Telephone is required</div>
+        }
+      </div>
+  
+      <div class="form-group">
+        <label for="grade">Grade</label>
+        <select 
+          id="grade" 
+          name="grade" 
+          [(ngModel)]="user.grade" 
+          required
+          #grade="ngModel"
+          class="form-control">
+          <option value="">Select Grade</option>
+          @for(grade of grades; track grade) {
+            <option [value]="grade">{{grade}}</option>
+          }
+        </select>
+        @if (submitted && grade.invalid) {
+          <div class="error">Grade is required</div>
+        }
+      </div>
+  
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+        <button type="button" class="btn-reset" (click)="resetForm()">
+          Reset
+        </button>
+      </div>
+    </form>
+  </div>
+  
