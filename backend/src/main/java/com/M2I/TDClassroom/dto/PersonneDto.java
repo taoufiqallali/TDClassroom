@@ -14,5 +14,6 @@ public class PersonneDto {
     private String prenom;
     private String email;
     private String tel;
+    private String grade;
     private Set<String> roles;
 }
