@@ -20,7 +20,7 @@ interface User {
   styleUrls: ['./user-form.component.css']
 })
 export class UserFormComponent implements OnInit {
-  @Input() userId?: number;
+  @Input() userId?: String;
 
   user: User = {
     nom: '',
@@ -44,7 +44,8 @@ export class UserFormComponent implements OnInit {
   }
 
   loadUser() {
-    this.http.get<User>(`http://localhost:8080/api/users/${this.userId}`)
+   
+    this.http.get<User>(`http://localhost:8080/api/personnes/email/${this.userId}`)
       .subscribe({
         next: (data) => {
           this.user = data;
@@ -68,7 +69,7 @@ export class UserFormComponent implements OnInit {
   }
 
   private createUser() {
-    this.http.post<User>('http://localhost:8080/api/users', this.user)
+    this.http.post<User>('http://localhost:8080/api/personnes', this.user)
       .subscribe({
         next: (response) => {
           console.log('User created successfully');

@@ -47,5 +47,5 @@
         </div>
       </div>
     
-      <div class="user-form" *ngIf="isVisible" (click)="$event.stopPropagation()"><button (click)="closeItem()"><img src="images/close.png" alt="Close" class="close-icon" (click)="closeItem()"></button><app-user-form [userId]="operation_type"></app-user-form></div>
+      <div class="user-form" *ngIf="isVisible" (click)="$event.stopPropagation()"><button (click)="closeItem()"><img src="images/close.png" alt="Close" class="close-icon" (click)="closeItem()"></button><app-user-form [userId]="selected_email"></app-user-form></div>
 </div>

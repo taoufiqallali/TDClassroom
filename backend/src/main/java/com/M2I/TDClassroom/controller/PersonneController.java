@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4201, allowedHeaders = \"*\", allowCredentials = \"true\")")  // Add this for Angular
 @RestController
 @RequestMapping("/api/personnes")
+@CrossOrigin(origins = "http://localhost:4201, allowedHeaders = \"*\", allowCredentials = \"true\")")  // Add this for Angular
 public class PersonneController {
 
     @Autowired
@@ -21,6 +21,13 @@ public class PersonneController {
     @GetMapping
     public ResponseEntity<List<PersonneDto>> getAllPersonnes() {
         return ResponseEntity.ok(personneService.getAllPersonnes());
+    }
+
+
+    // Get user by email
+    @GetMapping("/email/{email}")
+    public ResponseEntity<PersonneDto> getPersonneById(@PathVariable String email) {
+        return ResponseEntity.ok(personneService.getPersonneByEmail(email));
     }
 
     // Get user by ID

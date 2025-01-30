@@ -37,6 +37,13 @@ public class PersonneService {
                 .collect(Collectors.toList());
     }
 
+    // Get a user by email
+    public PersonneDto getPersonneByEmail(String email) {
+        Personne personne = personneRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Personne not found"));
+        return mapToDto(personne);
+    }
+
     // Get a user by ID
     public PersonneDto getPersonneById(Long id) {
         Personne personne = personneRepository.findById(id)
@@ -110,6 +117,7 @@ public class PersonneService {
                 personne.getSom(),
                 personne.getMotDePasse(),
                 personne.getUniteOrganisation() != null ? personne.getUniteOrganisation().getNom().name() : null,
+
                 personne.getRoles() != null
                         ? personne.getRoles().stream()
                         .map(role -> role.getRoleNom().name())

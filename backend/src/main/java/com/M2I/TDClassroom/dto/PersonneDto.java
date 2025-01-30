@@ -30,4 +30,5 @@ public class PersonneDto {
     private String motDePasse;
     private String uniteOrganisation; // Only the name of the UniteOrganisation
     private Set<String> roles; // Only role names
+
 }
