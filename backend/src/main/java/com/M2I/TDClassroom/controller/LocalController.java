@@ -1,5 +1,6 @@
 package com.M2I.TDClassroom.controller;
 
+import com.M2I.TDClassroom.dto.LocalDto;
 import com.M2I.TDClassroom.model.Local;
 import com.M2I.TDClassroom.service.LocalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4201, allowedHeaders = \"*\", allowCredentials = \"true\")")  // Add this for Angular
 @RestController
 @RequestMapping("/api/locals")
 public class LocalController {
@@ -27,12 +29,12 @@ public class LocalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Local>> getAllLocals() {
+    public ResponseEntity<List<LocalDto>> getAllLocals() {
         return ResponseEntity.ok(localService.getAllLocals());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Local> getLocalById(@PathVariable Long id) {
+    public ResponseEntity<LocalDto> getLocalById(@PathVariable Long id) {
         return ResponseEntity.ok(localService.getLocalById(id));
     }
 

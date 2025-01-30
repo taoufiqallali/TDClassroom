@@ -55,6 +55,15 @@ CREATE TABLE tdclassroom.unite_organisation (
     FOREIGN KEY (id_adjoint) REFERENCES personne(personne_id)
 );
 
+insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) values ('administration', 'fso', 1, 2);
+insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) values ('departement', 'informatique', 1, 2);
+insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) values ('departement', 'physique', 1, 2);
+insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) values ('departement', 'biologie', 1, 2);
+insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) values ('departement', 'chimie', 1, 2);
+insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) values ('departement', 'geologie', 1, 2);
+insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) values ('departement', 'mathematique', 1, 2);
+
+
 CREATE TABLE tdclassroom.local(
     id_local BIGINT PRIMARY KEY AUTO_INCREMENT,
     id_unite BIGINT,

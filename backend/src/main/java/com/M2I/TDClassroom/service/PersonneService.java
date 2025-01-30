@@ -97,8 +97,19 @@ public class PersonneService {
                 personne.getPersonneId(),
                 personne.getNom(),
                 personne.getPrenom(),
+                personne.getDateNaissance(),
                 personne.getEmail(),
+                personne.getCin(),
                 personne.getTel(),
+                personne.getGrade(),
+                personne.getAddress(),
+                personne.getVille(),
+                personne.getCodePostale(),
+                personne.getResponsabilite(),
+                personne.getNomBanque(),
+                personne.getSom(),
+                personne.getMotDePasse(),
+                personne.getUniteOrganisation() != null ? personne.getUniteOrganisation().getNom().name() : null,
                 personne.getRoles() != null
                         ? personne.getRoles().stream()
                         .map(role -> role.getRoleNom().name())
@@ -106,4 +117,5 @@ public class PersonneService {
                         : null
         );
     }
+
 }

@@ -1,5 +1,6 @@
 package com.M2I.TDClassroom.service;
 
+import com.M2I.TDClassroom.dto.LocalDto;
 import com.M2I.TDClassroom.model.Local;
 import com.M2I.TDClassroom.repository.LocalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LocalService {
@@ -17,16 +19,26 @@ public class LocalService {
         this.localRepository = localRepository;
     }
 
-    public List<Local> getAllLocals() {
-        return localRepository.findAll();
+    public List<LocalDto> getAllLocals() {
+        return localRepository.findAll()
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
-    public Local getLocalById(Long id) {
+    public LocalDto getLocalById(Long id) {
         Local local = localRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Local not found"));
 
-        return local;
+        return new LocalDto(
+                local.getIdLocal(),
+                local.getNom(),
+                local.getCapacite(),
+                local.isAccessibilitePmr(),
+                local.getUniteOrganisation().getNom().name() // Only returning the name of UniteOrganisation
+        );
     }
+
 
     public Local createLocal(Local local) {
         return localRepository.save(local);
@@ -52,5 +64,18 @@ public class LocalService {
 
     public void deleteAllLocals() {
         localRepository.deleteAll();
+    }
+
+    public LocalDto mapToDto(Local local) {
+        // Get the name of UniteOrganisation
+        String uniteOrganisationNom = local.getUniteOrganisation().getNom().name();
+
+        return new LocalDto(
+                local.getIdLocal(),
+                local.getNom(),
+                local.getCapacite(),
+                local.isAccessibilitePmr(),
+                uniteOrganisationNom // Only include the name
+        );
     }
 }

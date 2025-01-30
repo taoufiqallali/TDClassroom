@@ -2,6 +2,7 @@ package com.M2I.TDClassroom.model;
 
 import com.M2I.TDClassroom.enums.NomUnite;
 import com.M2I.TDClassroom.enums.TypeUnite;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,9 +29,11 @@ public class UniteOrganisation {
 
     @OneToOne
     @JoinColumn(name = "id_chef")
+    @JsonManagedReference
     private Personne chef;
 
     @OneToOne
     @JoinColumn(name = "id_adjoint")
+    @JsonManagedReference
     private Personne adjoint;
 }
