@@ -1,12 +1,17 @@
 package com.M2I.TDClassroom.service;
 
 import com.M2I.TDClassroom.model.Personne;
+import com.M2I.TDClassroom.model.Role;
+import com.M2I.TDClassroom.model.UniteOrganisation;
 import com.M2I.TDClassroom.repository.PersonneRepository;
 import com.M2I.TDClassroom.dto.PersonneDto;
+import com.M2I.TDClassroom.repository.RoleRepository;
+import com.M2I.TDClassroom.repository.UniteOrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -14,6 +19,12 @@ public class PersonneService {
 
     @Autowired
     private PersonneRepository personneRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private UniteOrganisationRepository uniteOrganisationRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -35,6 +46,7 @@ public class PersonneService {
 
     // Save a new user
     public void savePersonne(Personne personne) {
+
         personne.setMotDePasse(passwordEncoder.encode(personne.getMotDePasse()));
         personneRepository.save(personne);
     }
@@ -59,6 +71,7 @@ public class PersonneService {
         existingPersonne.setSom(updatedPersonne.getSom());
         existingPersonne.setUniteOrganisation(updatedPersonne.getUniteOrganisation());
         existingPersonne.setRoles(updatedPersonne.getRoles());
+
 
         // Encode password only if it's changed
         if (!updatedPersonne.getMotDePasse().equals(existingPersonne.getMotDePasse())) {

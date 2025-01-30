@@ -13,7 +13,7 @@ CREATE TABLE tdclassroom.personne (
     address VARCHAR(255) NOT NULL,
     ville VARCHAR(100) NOT NULL,
     code_postale VARCHAR(20),
-    responsabilite ENUM('administrateur', 'chef dep', 'adjoint chef dep', 'directeur lab'),
+    responsabilite ENUM('administrateur', 'chef', 'adjoint', 'directeur'),
     nom_banque VARCHAR(100) NOT NULL,
     SOM VARCHAR(100) NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
@@ -34,16 +34,9 @@ CREATE TABLE tdclassroom.personne_role (
     PRIMARY KEY (role_id, personne_id)
 );
 
-INSERT INTO tdclassroom.personne (
-    nom, prenom, date_naissance, email, CIN, tel, grade, address, ville,
-    code_postale, responsabilite, nom_banque, SOM, mot_de_passe, id_unite
-)
-VALUES (
-    'John', 'Doe', '1985-07-20', 'johndoe@example.com', 'CIN123456', '0612345678',
-    'PROFESSEUR', '123 Main St', 'Oujda', '12345', 'ADMINISTRATEUR', 'Banque XYZ',
-    'SOM12345', '$2a$12$gTMxTDPGlqZ5haOhQ.CXsuGWEYfuG2YumvnoO/UA54eXzfgsYowTS', 1
-); -- the password is 'admin'
-
+insert into personne(nom, prenom, date_naissance, email, CIN, tel, grade, address, ville, code_postale, responsabilite, nom_banque, SOM, mot_de_passe, id_unite) values ('admin', 'admin', '1999-01-01', 'admin@gmail.com', 'ffrr1234', '999999999', 'professeur', '123 oujda', 'oujda', '600000', 'administrateur', 'bank', '1234', '$2a$12$HyxhcWJiRGDewfrVrpFCJOAktoIxZ6ZhVXwA6pmelJrCu0qBN8zym', 1);
+--password: admin
+insert into personne(nom, prenom, date_naissance, email, CIN, tel, grade, address, ville, code_postale, responsabilite, nom_banque, SOM, mot_de_passe, id_unite) values ('personne', 'personne', '1999-01-01', 'personne@gmail.com', 'ffrr12345', '88888888', 'professeur', '1234 oujda', 'nador', '600001', 'administrateur', 'bank B', '1235', '$2a$12$HyxhcWJiRGDewfrVrpFCJOAktoIxZ6ZhVXwA6pmelJrCu0qBN8zym', 2);
 
 INSERT INTO tdclassroom.role (role_nom) VALUES ('ADMIN'), ('PERSONNE');
 
