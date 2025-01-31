@@ -161,6 +161,7 @@
   .table-container table {
     width: 100%; /* Ensure the table takes full width of the container */
     border-collapse: collapse;
+    
   }
   
   table {
