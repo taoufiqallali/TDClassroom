@@ -1,12 +1,12 @@
 package com.M2I.TDClassroom.model;
 
+import com.M2I.TDClassroom.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import com.M2I.TDClassroom.enums.Status;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "reservation")
@@ -16,28 +16,30 @@ import com.M2I.TDClassroom.enums.Status;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_reservation")
-    private Long idReservation;
-
-    @ManyToOne
-    @JoinColumn(name = "id_utilisateur", nullable = false)
-    private Personne utilisateur;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "id_local", nullable = false)
     private Local local;
 
-    @Column(name = "date_reservation", nullable = false)
-    private String dateReservation;
+    @ManyToOne
+    @JoinColumn(name = "id_equipement", nullable = false)
+    private Equipement equipement;
 
-    @Column(name = "heure_reservation", nullable = false)
-    private String heureReservation;
+    @ManyToOne
+    @JoinColumn(name = "personne_id", nullable = false)
+    private Personne personne;
 
-    @Column(name = "duree", nullable = false)
-    private int duree;
+    @Column(nullable = false)
+    private LocalDate date;
+
+    @Column(nullable = false)
+    private LocalTime startTime;
+
+    @Column(nullable = false)
+    private LocalTime endTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private Status status;
+    @Column(nullable = false)
+    private ReservationStatus status = ReservationStatus.PENDING;
 }
-
