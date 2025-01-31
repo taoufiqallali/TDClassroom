@@ -1,0 +1,56 @@
+<div class="hud"><app-admin-hud></app-admin-hud></div>
+<div class="content">
+    <div class="white-box">
+        <div class="tabs-container">
+            
+            <nav>
+              <ul class="tabs">
+                <li *ngFor="let group of unitelist; let i = index" 
+                    [class.active]="selectedTabIndex === group" 
+                    (click)="selectTab(group)">
+                  {{ group }}
+                </li>
+              </ul>
+              <div class="right-buttons">
+                <button class="add_button" (click)="add_room()">
+                  ajouter <img class="plus-icon" src="images/plus-icon.png">
+                </button>
+              </div>
+            </nav>
+
+            <table class="table-container">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Capacite</th>
+                        <th>Accessibilite</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let item of groupedData" [hidden]="selectedTabIndex !== item.uniteOrganisationNom">
+                        <td>{{ item.nom }}</td>
+                        <td>{{ item.capacite }}</td>
+                        <td>{{ item.accessibilitePmr ? 'Available' : 'Not Available' }}</td>
+                        <td>
+                            <button (click)="edit_room(item)">Modifier</button> 
+                            <button (click)="confirmDeleteRoom(item)">Supprimer</button> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="user-form" *ngIf="isVisible" (click)="$event.stopPropagation()">
+        <button (click)="close_form()">
+            <img src="images/close.png" alt="Close" class="close-icon">
+        </button>
+        <app-room-form [roomid]="roomid" 
+                       (triggercloseItem)="close_form()" 
+                       (triggersimple_notification)="simple_notification($event)">
+        </app-room-form>
+    </div>
+</div>

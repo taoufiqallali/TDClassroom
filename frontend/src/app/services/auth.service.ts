@@ -26,6 +26,7 @@ export class AuthService {
 
   handleSuccessfulLogin(response: AuthResponse) {
     localStorage.setItem('currentUser', JSON.stringify(response));
+    console.log('currentUser', JSON.stringify(response));
     this.router.navigate(['/hud']);
   }
 

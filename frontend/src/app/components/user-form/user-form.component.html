@@ -1,99 +1,273 @@
 <div class="form-container">
-    <h2>{{ isEditMode ? 'Edit User' : 'Create New User' }}</h2>
-    
-    @if (errorMessage) {
-      <div class="error-message">{{ errorMessage }}</div>
-    }
-  
-    <form (ngSubmit)="onSubmit()" #userForm="ngForm">
-      <div class="form-group">
-        <label for="nom">Nom</label>
-        <input 
-          type="text" 
-          id="nom" 
-          name="nom" 
-          [(ngModel)]="user.nom" 
-          required
-          #nom="ngModel"
-          class="form-control">
-        @if (submitted && nom.invalid) {
-          <div class="error">Nom is required</div>
+  <h2>{{ isEditMode ? 'Edit User' : 'Create New User' }}</h2>
+
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
+
+  <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+    <!-- Existing Fields -->
+    <div class="form-group">
+      <label for="nom">Nom</label>
+      <input 
+        type="text" 
+        id="nom" 
+        name="nom" 
+        [(ngModel)]="user.nom" 
+        required
+        #nom="ngModel"
+        class="form-control">
+      @if (submitted && nom.invalid) {
+        <div class="error">Nom is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="prenom">Prénom</label>
+      <input 
+        type="text" 
+        id="prenom" 
+        name="prenom" 
+        [(ngModel)]="user.prenom" 
+        required
+        #prenom="ngModel"
+        class="form-control">
+      @if (submitted && prenom.invalid) {
+        <div class="error">Prénom is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="dateNaissance">Date de Naissance</label>
+      <input 
+        type="date" 
+        id="dateNaissance" 
+        name="dateNaissance" 
+        [(ngModel)]="user.dateNaissance" 
+        required
+        #dateNaissance="ngModel"
+        class="form-control">
+      @if (submitted && dateNaissance.invalid) {
+        <div class="error">Date de Naissance is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        [(ngModel)]="user.email" 
+        required 
+        email
+        #email="ngModel"
+        class="form-control">
+      @if (submitted && email.invalid) {
+        <div class="error">Valid email is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="cin">CIN</label>
+      <input 
+        type="text" 
+        id="cin" 
+        name="cin" 
+        [(ngModel)]="user.cin" 
+        required
+        #cin="ngModel"
+        class="form-control">
+      @if (submitted && cin.invalid) {
+        <div class="error">CIN is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="tel">Téléphone</label>
+      <input 
+        type="tel" 
+        id="tel" 
+        name="tel" 
+        [(ngModel)]="user.tel" 
+        required
+        #tel="ngModel"
+        class="form-control">
+      @if (submitted && tel.invalid) {
+        <div class="error">Telephone is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="grade">Grade</label>
+      <select 
+        id="grade" 
+        name="grade" 
+        [(ngModel)]="user.grade" 
+        required
+        #grade="ngModel"
+        class="form-control">
+        <option value="">Select Grade</option>
+        @for(grade of grades; track grade) {
+          <option [value]="grade">{{grade}}</option>
         }
-      </div>
-  
-      <div class="form-group">
-        <label for="prenom">Prénom</label>
-        <input 
-          type="text" 
-          id="prenom" 
-          name="prenom" 
-          [(ngModel)]="user.prenom" 
-          required
-          #prenom="ngModel"
-          class="form-control">
-        @if (submitted && prenom.invalid) {
-          <div class="error">Prénom is required</div>
+      </select>
+      @if (submitted && grade.invalid) {
+        <div class="error">Grade is required</div>
+      }
+    </div>
+
+    <!-- New Fields -->
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input 
+        type="text" 
+        id="address" 
+        name="address" 
+        [(ngModel)]="user.address" 
+        required
+        #address="ngModel"
+        class="form-control">
+      @if (submitted && address.invalid) {
+        <div class="error">Address is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="ville">Ville</label>
+      <input 
+        type="text" 
+        id="ville" 
+        name="ville" 
+        [(ngModel)]="user.ville" 
+        required
+        #ville="ngModel"
+        class="form-control">
+      @if (submitted && ville.invalid) {
+        <div class="error">Ville is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="codePostale">Code Postale</label>
+      <input 
+        type="text" 
+        id="codePostale" 
+        name="codePostale" 
+        [(ngModel)]="user.codePostale" 
+        required
+        #codePostale="ngModel"
+        class="form-control">
+      @if (submitted && codePostale.invalid) {
+        <div class="error">Code Postale is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="responsabilite">Responsabilité</label>
+      <select 
+        id="responsabilite" 
+        name="responsabilite" 
+        [(ngModel)]="user.responsabilite" 
+        required
+        #responsabilite="ngModel"
+        class="form-control">
+        <option value="">Select Responsabilité</option>
+        @for(resp of responsabilites; track resp) {
+          <option [value]="resp">{{resp}}</option>
         }
-      </div>
-  
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email" 
-          [(ngModel)]="user.email" 
-          required 
-          email
-          #email="ngModel"
-          class="form-control">
-        @if (submitted && email.invalid) {
-          <div class="error">Valid email is required</div>
+      </select>
+      @if (submitted && responsabilite.invalid) {
+        <div class="error">Responsabilité is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="nomBanque">Nom de la Banque</label>
+      <input 
+        type="text" 
+        id="nomBanque" 
+        name="nomBanque" 
+        [(ngModel)]="user.nomBanque" 
+        required
+        #nomBanque="ngModel"
+        class="form-control">
+      @if (submitted && nomBanque.invalid) {
+        <div class="error">Nom de la Banque is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="som">Som</label>
+      <input 
+        type="text" 
+        id="som" 
+        name="som" 
+        [(ngModel)]="user.som" 
+        required
+        #som="ngModel"
+        class="form-control">
+      @if (submitted && som.invalid) {
+        <div class="error">Som is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="motDePasse">Mot de Passe</label>
+      <input 
+        type="password" 
+        id="motDePasse" 
+        name="motDePasse" 
+        [(ngModel)]="user.motDePasse" 
+        required
+        #motDePasse="ngModel"
+        class="form-control">
+      @if (submitted && motDePasse.invalid) {
+        <div class="error">Mot de Passe is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="uniteOrganisation">Unité d'Organisation</label>
+      <input 
+        type="text" 
+        id="uniteOrganisation" 
+        name="uniteOrganisation" 
+        [(ngModel)]="user.uniteOrganisation" 
+        required
+        #uniteOrganisation="ngModel"
+        class="form-control">
+      @if (submitted && uniteOrganisation.invalid) {
+        <div class="error">Unité d'Organisation is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="roles">Roles</label>
+      <select 
+        id="roles" 
+        name="roles" 
+        [(ngModel)]="user.roles" 
+        multiple
+        required
+        #roles="ngModel"
+        class="form-control">
+        @for(role of availableRoles; track role) {
+          <option [value]="role">{{role}}</option>
         }
-      </div>
-  
-      <div class="form-group">
-        <label for="tel">Téléphone</label>
-        <input 
-          type="tel" 
-          id="tel" 
-          name="tel" 
-          [(ngModel)]="user.tel" 
-          required
-          #tel="ngModel"
-          class="form-control">
-        @if (submitted && tel.invalid) {
-          <div class="error">Telephone is required</div>
-        }
-      </div>
-  
-      <div class="form-group">
-        <label for="grade">Grade</label>
-        <select 
-          id="grade" 
-          name="grade" 
-          [(ngModel)]="user.grade" 
-          required
-          #grade="ngModel"
-          class="form-control">
-          <option value="">Select Grade</option>
-          @for(grade of grades; track grade) {
-            <option [value]="grade">{{grade}}</option>
-          }
-        </select>
-        @if (submitted && grade.invalid) {
-          <div class="error">Grade is required</div>
-        }
-      </div>
-  
-      <div class="form-actions">
-        <button type="submit" class="btn-submit">
-          {{ isEditMode ? 'Update' : 'Create' }}
-        </button>
-        <button type="button" class="btn-reset" (click)="resetForm()">
-          Reset
-        </button>
-      </div>
-    </form>
-  </div>
-  
+      </select>
+      @if (submitted && roles.invalid) {
+        <div class="error">At least one role is required</div>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+      <button type="button" class="btn-reset" (click)="resetForm()">
+        Reset
+      </button>
+    </div>
+  </form>
+</div>

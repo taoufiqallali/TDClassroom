@@ -1,4 +1,71 @@
-.content{
+.tabs-container {
+    margin: 20px;
+  }
+  
+  nav {
+    margin-bottom: 10px;
+  }
+  
+  ul.tabs {
+    list-style-type: none;
+    display: flex;
+    padding: 0;
+  }
+  
+  ul.tabs li {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    margin-right: 5px;
+    border-radius: 5px;
+  }
+  
+  ul.tabs li.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .table th, .table td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .table th {
+    background-color: #f4f4f4;
+  }
+  
+  .content{
+    position: absolute;
+    width: 60%;   /* Set a fixed width */
+    height: 60%;  /* Set a fixed height */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0; /* Ensures the div is above other content */
+    background: rgba(0, 0, 0, 0); /* Optional: Semi-transparent background */
+    padding: 1px;
+    border-radius: 2px;
+}
+.white-box {
+    position: absolute ;
+    width: 100%;   /* Set a fixed width */
+    height: 100%;  /* Set a fixed height */
+    background: rgba(253, 252, 252, 0.39);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    min-height: 300px;
+  }
+
+  .content{
     position: absolute;
     width: 60%;   /* Set a fixed width */
     height: 60%;  /* Set a fixed height */

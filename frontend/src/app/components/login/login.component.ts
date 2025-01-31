@@ -39,7 +39,6 @@ export class LoginComponent {
           }
         },
         error: (error) => {
-          console.log("test----------------------------");
           this.error = error.error.message || 'An error occurred during login';
           this.loading = false;
         },
