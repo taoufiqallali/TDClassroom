@@ -7,6 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+RUN npx ng add @angular/material --skip-confirmation
 # Copy source code for live updates
 #COPY . .
 # this is commented to allow for changes in code to directly apply to container
