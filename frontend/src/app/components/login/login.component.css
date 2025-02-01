@@ -1,23 +1,33 @@
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  background: linear-gradient(to right,  #f1c37d85 ,#9bc8f5c4);
+  
+}
+
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(to right,  #f1c37d85 ,#9bc8f5c4);
 }
 
 .login-box {
-  background: white;
+  background: rgba(21, 208, 233, 0.247);
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
 }
 
 h2 {
   text-align: center;
-  color: #333;
+  color: #333333;
   margin-bottom: 1.5rem;
 }
 
@@ -28,7 +38,7 @@ h2 {
 label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666;
+  color: #222121;
 }
 
 input {
@@ -77,4 +87,24 @@ input:focus {
 .login-button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.temp-button {
+  position: absolute;
+  transform:translateY(150%);;
+  z-index: 1000;
+  width: 100%;
+}
+.left-float {
+  float: left;
+  margin-right: 10px; /* Optional: adds space between buttons */
+  background-color: #4CAF50; /* Green background */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
 }

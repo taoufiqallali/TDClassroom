@@ -74,6 +74,7 @@ delete_room(room:any){
 
   ngOnInit(): void {
     this.loadRooms();
+this.selectedTabIndex='fso'; // make it dynamic
   }
 
   // Method to load rooms using the service

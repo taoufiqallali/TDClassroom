@@ -42,28 +42,7 @@
     background-color: #f4f4f4;
   }
   
-  .content{
-    position: absolute;
-    width: 60%;   /* Set a fixed width */
-    height: 60%;  /* Set a fixed height */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 0; /* Ensures the div is above other content */
-    background: rgba(0, 0, 0, 0); /* Optional: Semi-transparent background */
-    padding: 1px;
-    border-radius: 2px;
-}
-.white-box {
-    position: absolute ;
-    width: 100%;   /* Set a fixed width */
-    height: 100%;  /* Set a fixed height */
-    background: rgba(253, 252, 252, 0.39);
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 20px;
-    min-height: 300px;
-  }
+ 
 
   .content{
     position: absolute;
@@ -148,25 +127,26 @@
   }
 
   .table-container {
+    
     width: 90%;
     padding: 20px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin: 20px;
-    max-height: 450px;
-    overflow-y: auto;  /* Enable vertical scrolling */
-    overflow-x: auto;  /* Enable horizontal scrolling if needed */
+ 
   }
   .table-container table {
     width: 100%; /* Ensure the table takes full width of the container */
     border-collapse: collapse;
+    
     
   }
   
   table {
     width: 100%;
     border-collapse: collapse;
+    
   }
   
   th, td {

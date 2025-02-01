@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent implements OnInit {
   currentDate: Date = new Date();
   dropdownVisible: boolean = false;
-  username: string = ''; // Fetched from backend
+  username: string | null = ''; // Fetched from backend
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -23,14 +23,23 @@ export class HeaderComponent implements OnInit {
     }, 1000);
 
     // Fetch the username from the backend
-    this.http.get<{ username: string }>('/api/user').subscribe({
-      next: (data) => {
-        this.username = data.username;
-      },
-      error: (err) => {
-        console.error('Error fetching username:', err);
-      }
-    });
+    // this.http.get<{ username: string }>('/api/user').subscribe({
+    //   next: (data) => {
+    //     this.username = data.username;
+    //   },
+    //   error: (err) => {
+    //     console.error('Error fetching username:', err);
+    //   }
+    // });
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      const userObject = JSON.parse(currentUser);
+      this.username = userObject.username;
+    } else {
+      // Handle the case when there is no user data in localStorage
+      this.username = ''; // Or you can assign any default value
+    }
+    
   }
 
   toggleDropdown(): void {
