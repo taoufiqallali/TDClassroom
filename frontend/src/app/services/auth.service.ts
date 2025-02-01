@@ -27,7 +27,11 @@ export class AuthService {
   handleSuccessfulLogin(response: AuthResponse) {
     localStorage.setItem('currentUser', JSON.stringify(response));
     console.log('currentUser', JSON.stringify(response));
+<<<<<<< HEAD
     this.router.navigate(['/user-list']);
+=======
+    this.router.navigate(['/hud']);
+>>>>>>> 14b4b1e (added the the operations of reservation and equipement for the second time)
   }
 
   logout() {

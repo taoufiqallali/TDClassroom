@@ -73,40 +73,31 @@ CREATE TABLE tdclassroom.local(
     FOREIGN KEY (id_unite) REFERENCES unite_organisation(id_unite)
 );
 
-CREATE TABLE tdclassroom.equipement (
-    id_equipement BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
+CREATE TABLE equipements (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT NOT NULL
 );
 
-CREATE TABLE tdclassroom.local_equipement (
-    id_local BIGINT,
-    id_equipement BIGINT,
-    FOREIGN KEY (id_local) REFERENCES local(id_local),
-    FOREIGN KEY (id_equipement) REFERENCES equipement(id_equipement),
-    PRIMARY KEY (id_local, id_equipement)
+
+CREATE TABLE reservation (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_local BIGINT NOT NULL,
+    personne_id BIGINT NOT NULL,
+    date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    status ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
+    FOREIGN KEY (id_local) REFERENCES local(id_local) ON DELETE CASCADE,
+    FOREIGN KEY (personne_id) REFERENCES personne(personne_id) ON DELETE CASCADE
 );
 
-CREATE TABLE tdclassroom.reservation (
-    id_reservation BIGINT PRIMARY KEY AUTO_INCREMENT,
-    id_utilisateur BIGINT,
-    id_local BIGINT,
-    date_reservation DATE NOT NULL,
-    heure_reservation TIME NOT NULL,
-    duree INT NOT NULL,
-    status ENUM('pending', 'declined', 'accepted', 'cancelled') DEFAULT 'pending',
-    FOREIGN KEY (id_utilisateur) REFERENCES personne(personne_id),
-    FOREIGN KEY (id_local) REFERENCES local(id_local)
+CREATE TABLE reservation_equipement (
+    reservation_id BIGINT NOT NULL,
+    equipement_id BIGINT NOT NULL,
+    PRIMARY KEY (reservation_id, equipement_id),
+    FOREIGN KEY (reservation_id) REFERENCES reservation(id) ON DELETE CASCADE,
+    FOREIGN KEY (equipement_id) REFERENCES equipement(id_equipement) ON DELETE CASCADE
 );
 
-CREATE TABLE tdclassroom.notification (
-    id_notification BIGINT PRIMARY KEY AUTO_INCREMENT,
-    id_personne BIGINT,
-    id_reservation BIGINT,
-    type ENUM('pending', 'declined', 'accepted', 'cancelled') NOT NULL,
-    message TEXT NOT NULL,
-    status ENUM('unread', 'read') DEFAULT 'unread',
-    temps_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_personne) REFERENCES personne(personne_id),
-    FOREIGN KEY (id_reservation) REFERENCES reservation(id_reservation)
-);
+
