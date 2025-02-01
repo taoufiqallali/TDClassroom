@@ -18,12 +18,9 @@ import java.util.Set;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_reservation")
+    @Column(name = "id")
     private Long idReservation;
 
-    @ManyToOne
-    @JoinColumn(name = "id_utilisateur", nullable = false)
-    private Personne utilisateur;
 
     @ManyToOne
     @JoinColumn(name = "id_local", nullable = false)

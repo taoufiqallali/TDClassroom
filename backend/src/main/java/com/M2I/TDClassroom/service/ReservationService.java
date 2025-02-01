@@ -99,7 +99,7 @@ public class ReservationService {
 
     private ReservationDto mapToDto(Reservation reservation) {
         return new ReservationDto(
-                reservation.getId(),
+                reservation.getIdReservation(),
                 reservation.getLocal().getIdLocal(), // Fixed Local ID
                 reservation.getEquipements().stream().map(Equipement::getIdEquipement).collect(Collectors.toSet()),
                 reservation.getPersonne().getPersonneId(),
