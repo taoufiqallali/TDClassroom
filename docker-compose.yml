@@ -7,7 +7,7 @@ services:
       MYSQL_ROOT_PASSWORD: "root"
     volumes:
       - ./backend/src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - mysql_data:/var/lib/mysql  # Persistent volume for MySQL data
+      - mysql_data:/var/lib/mysql
     networks:
       - backend-database
     ports:
@@ -38,16 +38,17 @@ services:
     build:
       context: ./frontend
     ports:
-      - "4201:4200"
+      - "4201:4200"  # Keep this but ensure you access localhost:4201
     volumes:
-      - ./frontend/:/app  # Mount your Angular project into /app
-      - /app/node_modules  # Prevent overwriting `node_modules`
+      - ./frontend/:/app  # Mount project directory
+      - /app/node_modules  # Prevent node_modules issues
     depends_on:
       - backend
+    command: ["ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--disable-host-check"]
 
 networks:
   backend-database:
     driver: bridge
 
 volumes:
-  mysql_data:   # Declare the volume
+  mysql_data:
