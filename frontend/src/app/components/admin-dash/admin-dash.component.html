@@ -1,0 +1,18 @@
+<div class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <app-header></app-header>
+  
+    <!-- Main Content Area -->
+    <div class="flex flex-1">
+      <!-- Sidebar -->
+      <app-admin-sidebar></app-admin-sidebar>  
+
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 overflow-y-auto" [ngClass]="{'ml-64': !sidebarCollapsed && !isMobile, 'ml-20': sidebarCollapsed && !isMobile}">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+
+

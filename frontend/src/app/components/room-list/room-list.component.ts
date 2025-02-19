@@ -1,4 +1,3 @@
-import { AdminHUDComponent } from '../admin-hud/admin-hud.component';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { roomlistservice, Room_list } from '../../services/room-list.service';
@@ -7,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-room-list',
-  imports: [AdminHUDComponent, CommonModule, RoomFormComponent],
+  imports: [ CommonModule, RoomFormComponent],
   templateUrl: './room-list.component.html',
   styleUrl: './room-list.component.css'
 })

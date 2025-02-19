@@ -1,5 +1,4 @@
 import { Component,OnInit } from '@angular/core';
-import { AdminHUDComponent } from '../admin-hud/admin-hud.component';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserFormComponent } from '../user-form/user-form.component';
@@ -20,7 +19,7 @@ interface User {
 @Component({
 
   selector: 'app-manage-user',
-  imports: [AdminHUDComponent,CommonModule,HttpClientModule,UserFormComponent],
+  imports: [CommonModule,HttpClientModule,UserFormComponent],
   templateUrl: './manage-user.component.html',
   styleUrl: './manage-user.component.css'
 })

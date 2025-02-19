@@ -27,7 +27,7 @@ export class AuthService {
   handleSuccessfulLogin(response: AuthResponse) {
     localStorage.setItem('currentUser', JSON.stringify(response));
     console.log('currentUser', JSON.stringify(response));
-    this.router.navigate(['/hud']); // Redirect to 'hud'
+    this.router.navigate(['/admin-dash']); // Redirect to 'hud'
   }
 
   logout() {
