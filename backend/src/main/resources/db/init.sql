@@ -34,8 +34,8 @@ CREATE TABLE tdclassroom.personne_role (
     PRIMARY KEY (role_id, personne_id)
 );
 
-insert into personne(nom, prenom, date_naissance, email, CIN, tel, grade, address, ville, code_postale, responsabilite, nom_banque, SOM, mot_de_passe, id_unite) values ('admin', 'admin', '1999-01-01', 'admin@gmail.com', 'ffrr1234', '999999999', 'professeur', '123 oujda', 'oujda', '600000', 'administrateur', 'bank', '1234', '$2a$12$HyxhcWJiRGDewfrVrpFCJOAktoIxZ6ZhVXwA6pmelJrCu0qBN8zym', 1);
---password: admin
+insert into personne(nom, prenom, date_naissance, email, CIN, tel, grade, address, ville, code_postale, responsabilite, nom_banque, SOM, mot_de_passe, id_unite) values ('admin', 'admin', '1999-01-01', 'admin@gmail.com', 'ffrr1234', '999999999', 'professeur', '123 oujda', 'oujda', '600000', 'administrateur', 'bank', '1234', '$2a$12$fa4uPFwDnbc2G8pR0a9z4.KqFNbldGFY7U68F8hynFEjQr7FlktIK', 1);
+
 insert into personne(nom, prenom, date_naissance, email, CIN, tel, grade, address, ville, code_postale, responsabilite, nom_banque, SOM, mot_de_passe, id_unite) values ('personne', 'personne', '1999-01-01', 'personne@gmail.com', 'ffrr12345', '88888888', 'professeur', '1234 oujda', 'nador', '600001', 'administrateur', 'bank B', '1235', '$2a$12$HyxhcWJiRGDewfrVrpFCJOAktoIxZ6ZhVXwA6pmelJrCu0qBN8zym', 2);
 
 INSERT INTO tdclassroom.role (role_nom) VALUES ('ADMIN'), ('PERSONNE');

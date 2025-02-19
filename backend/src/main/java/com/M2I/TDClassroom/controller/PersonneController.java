@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/personnes")
-@CrossOrigin(origins = "http://localhost:4201, allowedHeaders = \"*\", allowCredentials = \"true\")")  // Add this for Angular
+@CrossOrigin(origins = "http://localhost:4201", allowedHeaders = "*", allowCredentials = "true")
 public class PersonneController {
 
     @Autowired

@@ -33,27 +33,12 @@ public class SecurityConfiguration {
         return  httpSecurity
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(http -> {
-
-                        http.requestMatchers("/api/auth/login", "/api/equipements/**", "/api/reservations/**").permitAll();
-                        http.requestMatchers( "/api/personnes/**", "/api/locals/**").hasRole("ADMIN");
-                        http.anyRequest().authenticated();
+                        http.anyRequest().permitAll();
                     })
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                     .build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4201")); // Your frontend URL
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true); // This allows the browser to send cookies (session)
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
     @Bean
     public UserDetailsService userDetailsService(){

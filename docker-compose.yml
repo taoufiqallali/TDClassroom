@@ -33,6 +33,7 @@ services:
         condition: service_healthy
     networks:
       - backend-database
+      - app-network
 
   frontend:
     build:
@@ -45,9 +46,14 @@ services:
     depends_on:
       - backend
     command: ["ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--disable-host-check"]
+    networks:
+      - app-network
+
 
 networks:
   backend-database:
+    driver: bridge
+  app-network:
     driver: bridge
 
 volumes:
