@@ -51,7 +51,7 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+
     public Reservation createReservation(Reservation reservationRequest) {
         // Fetch and set Local
         Local local = localRepository.findById(reservationRequest.getLocal().getIdLocal())
@@ -63,13 +63,6 @@ public class ReservationService {
                 .orElseThrow(() -> new RuntimeException("Personne not found"));
         reservationRequest.setPersonne(personne);
 
-        // Fetch and set Equipements
-        Set<Equipement> equipements = reservationRequest.getEquipements().stream()
-                .map(e -> equipementRepository.findById(e.getIdEquipement())
-                        .orElseThrow(() -> new RuntimeException("Equipement not found")))
-                .collect(Collectors.toSet());
-        reservationRequest.setEquipements(equipements);
-
         // Check if a reservation overlaps with the requested time and local
         boolean reservationExists = reservationRepository.existsByLocal_IdLocalAndDateAndStartTimeLessThanAndEndTimeGreaterThan(
                 reservationRequest.getLocal().getIdLocal(), reservationRequest.getDate(),
@@ -80,7 +73,7 @@ public class ReservationService {
         }
 
         // Set status and save the reservation
-        reservationRequest.setStatus(ReservationStatus.APPROVED); // Default status
+        reservationRequest.setStatus(ReservationStatus.PENDING); // Default status
         return reservationRepository.save(reservationRequest);
     }
 
@@ -99,9 +92,8 @@ public class ReservationService {
 
     private ReservationDto mapToDto(Reservation reservation) {
         return new ReservationDto(
-                reservation.getIdReservation(),
+                reservation.getId(),
                 reservation.getLocal().getIdLocal(), // Fixed Local ID
-                reservation.getEquipements().stream().map(Equipement::getIdEquipement).collect(Collectors.toSet()),
                 reservation.getPersonne().getPersonneId(),
                 reservation.getDate(),
                 reservation.getStartTime(),

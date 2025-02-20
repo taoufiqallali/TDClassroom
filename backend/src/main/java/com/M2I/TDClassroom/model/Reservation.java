@@ -8,36 +8,26 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Set;
 
-@Entity
-@Table(name = "reservation")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "reservation")
 public class Reservation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long idReservation;
-
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "id_local", nullable = false)
     private Local local;
 
-
     @ManyToOne
     @JoinColumn(name = "personne_id", nullable = false)
     private Personne personne;
-
-    @ManyToMany
-    @JoinTable(
-            name = "reservation_equipement",
-            joinColumns = @JoinColumn(name = "reservation_id"),
-            inverseJoinColumns = @JoinColumn(name = "equipement_id")
-    )
-    private Set<Equipement> equipements;
 
     @Column(nullable = false)
     private LocalDate date;

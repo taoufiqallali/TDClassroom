@@ -30,15 +30,8 @@ public class LocalService {
         Local local = localRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Local not found"));
 
-        return new LocalDto(
-                local.getIdLocal(),
-                local.getNom(),
-                local.getCapacite(),
-                local.isAccessibilitePmr(),
-                local.getUniteOrganisation().getNom().name() // Only returning the name of UniteOrganisation
-        );
+        return mapToDto(local);
     }
-
 
     public Local createLocal(Local local) {
         return localRepository.save(local);
@@ -50,6 +43,8 @@ public class LocalService {
             local.setNom(updatedLocal.getNom());
             local.setCapacite(updatedLocal.getCapacite());
             local.setAccessibilitePmr(updatedLocal.isAccessibilitePmr());
+            local.setDatashow(updatedLocal.isDatashow());  // Set datashow
+            local.setEcranTactile(updatedLocal.getEcranTactile());  // Set ecranTactile
             return localRepository.save(local);
         }).orElseThrow(() -> new RuntimeException("Local not found with id: " + id));
     }
@@ -75,7 +70,9 @@ public class LocalService {
                 local.getNom(),
                 local.getCapacite(),
                 local.isAccessibilitePmr(),
-                uniteOrganisationNom // Only include the name
+                uniteOrganisationNom, // Only include the name
+                local.isDatashow(), // Include datashow status
+                local.getEcranTactile() // Include ecranTactile status (can be null)
         );
     }
 }

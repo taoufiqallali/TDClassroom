@@ -29,7 +29,7 @@ public class LocalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LocalDto>> getAllLocals() {
+    public ResponseEntity<List<LocalDto>> getAllLocals()     {
         return ResponseEntity.ok(localService.getAllLocals());
     }
 

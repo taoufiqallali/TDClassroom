@@ -19,7 +19,6 @@ public class Local {
     @ManyToOne
     @JoinColumn(name = "id_unite", nullable = false)
     private UniteOrganisation uniteOrganisation;
-
     @Column(name = "nom", nullable = false, length = 100)
     private String nom;
 
@@ -28,4 +27,10 @@ public class Local {
 
     @Column(name = "accessibilite_pmr", nullable = false)
     private boolean accessibilitePmr;
+
+    @Column(name = "datashow", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean datashow = false;
+
+    @Column(name = "ecrantactille")
+    private Boolean ecranTactile;
 }

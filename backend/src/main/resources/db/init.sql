@@ -64,20 +64,25 @@ insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) value
 insert into tdclassroom.unite_organisation(type, nom, id_chef, id_adjoint) values ('departement', 'mathematique', 1, 2);
 
 
-CREATE TABLE tdclassroom.local(
+CREATE TABLE tdclassroom.local (
     id_local BIGINT PRIMARY KEY AUTO_INCREMENT,
     id_unite BIGINT,
     nom VARCHAR(100) NOT NULL,
     capacite INT NOT NULL,
     accessibilite_pmr BOOLEAN NOT NULL,
-    FOREIGN KEY (id_unite) REFERENCES unite_organisation(id_unite)
+    datashow BOOLEAN DEFAULT FALSE,
+    ecrantactille BOOLEAN DEFAULT NULL,
+    FOREIGN KEY (id_unite) REFERENCES unite_organisation(id_unite) ON DELETE CASCADE
 );
 
-CREATE TABLE equipements (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE,
-    description TEXT NOT NULL
-);
+INSERT INTO tdclassroom.local (id_unite, nom, capacite, accessibilite_pmr, datashow, ecrantactille)
+VALUES
+(1, 'Salle A101', 30, TRUE, TRUE, FALSE),
+(2, 'Salle B202', 50, FALSE, FALSE, FALSE),
+(3, 'Salle C303', 25, TRUE, FALSE, TRUE),
+(1, 'Salle D404', 40, TRUE, TRUE, TRUE),
+(2, 'Salle E505', 60, FALSE, TRUE, TRUE);
+
 
 
 CREATE TABLE reservation (
@@ -92,12 +97,5 @@ CREATE TABLE reservation (
     FOREIGN KEY (personne_id) REFERENCES personne(personne_id) ON DELETE CASCADE
 );
 
-CREATE TABLE reservation_equipement (
-    reservation_id BIGINT NOT NULL,
-    equipement_id BIGINT NOT NULL,
-    PRIMARY KEY (reservation_id, equipement_id),
-    FOREIGN KEY (reservation_id) REFERENCES reservation(id) ON DELETE CASCADE,
-    FOREIGN KEY (equipement_id) REFERENCES equipement(id_equipement) ON DELETE CASCADE
-);
 
 

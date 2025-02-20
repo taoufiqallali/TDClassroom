@@ -15,7 +15,6 @@ import java.util.Set;
 public class ReservationDto {
     private Long id;
     private Long localId;
-    private Set<Long> equipementIds;  // Change from single ID to a Set
     private Long personneId;
     private LocalDate date;
     private LocalTime startTime;
