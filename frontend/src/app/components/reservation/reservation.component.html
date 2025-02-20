@@ -1,0 +1,33 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+    <div *ngFor="let reservation of pending"
+         [class.bg-red-200]="isOverlapping(reservation)"
+         class="bg-white shadow-lg rounded-lg p-4 border border-gray-200 transition">
+  
+      <h2 class="text-xl font-bold text-gray-800">Reservation #{{ reservation.id_reservation }}</h2>
+      <p class="text-gray-600 text-sm">Status: <span class="font-semibold capitalize">{{ reservation.status }}</span></p>
+  
+      <div class="mt-2">
+        <p><strong>Date:</strong> {{ reservation.date_reservation }}</p>
+        <p><strong>start Time:</strong> {{ reservation.start_time }}</p>
+        <p><strong>end Time:</strong> {{ reservation.end_time }}</p>
+        <p><strong>Duration:</strong> {{ reservation.duree }} hour(s)</p>
+        <p><strong>User Name:</strong> {{ getUserName(reservation.id_utilisateur) }}</p>
+        <p><strong>Local ID:</strong> {{ getLocalName(reservation.id_local )}}</p>
+      </div>
+  
+      <div class="mt-4 flex space-x-2">
+        
+        <button *ngIf="reservation.status === 'PENDING'"
+                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                (click)="acceptReservation()">
+          Accept
+        </button>
+        <button *ngIf="reservation.status === 'PENDING'"
+                class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                (click)="rejectReservation()">
+          Reject
+        </button>
+      </div>
+  
+    </div>
+  </div>

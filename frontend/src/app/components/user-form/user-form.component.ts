@@ -88,7 +88,8 @@ export class UserFormComponent implements OnInit {
         next: (data) => {
           this.user = {
             ...data,
-            dateNaissance: this.formatDateForInput(data.dateNaissance) // Format the dat
+            dateNaissance: this.formatDateForInput(data.dateNaissance), // Format the dat
+            motDePasse:''
           };
         },
         error: (error) => {
