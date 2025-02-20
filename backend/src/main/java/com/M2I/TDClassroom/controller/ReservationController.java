@@ -24,8 +24,8 @@ public class ReservationController {
         return reservationService.getAllReservations();
     }
 
-    @GetMapping("/mine")
-    public List<ReservationDto> getMyReservations(@RequestParam Long personneId) {
+    @GetMapping("/{personneId}")
+    public List<ReservationDto> getMyReservations(@PathVariable Long personneId) {
         return reservationService.getMyReservations(personneId);
     }
 
