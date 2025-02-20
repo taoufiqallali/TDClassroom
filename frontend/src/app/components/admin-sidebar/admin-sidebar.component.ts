@@ -37,7 +37,7 @@ export class AdminSidebarComponent {
 
   // Navigates to the specified route
   navigateTo(route: string) {
-    this.router.navigate([`/${route.toLowerCase()}`]);
+    this.router.navigate([`/admin-dash/${route.toLowerCase()}`]);
   }
 
   // Checks if the screen is mobile

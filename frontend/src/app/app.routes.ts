@@ -6,8 +6,14 @@ import { ManageUserComponent } from './components/manage-user/manage-user.compon
 import { RoomListComponent } from './components/room-list/room-list.component';
 export const routes: Routes = [
   { path: 'rooms', component: RoomListComponent },
-  { path: 'users', component: ManageUserComponent },
-  { path: 'admin-dash', component: AdminDashComponent },
+ // { path: 'users', component: ManageUserComponent },
+  { path: 'admin-dash', component: AdminDashComponent,
+    children: [
+      { path: 'users', component: ManageUserComponent },
+      { path: 'classrooms', component: RoomListComponent }
+
+    ]
+   },
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' }, // Default route
   { path: '**', redirectTo: '/login' } // Fallback route

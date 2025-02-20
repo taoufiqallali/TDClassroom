@@ -8,6 +8,9 @@ import { LoginComponent } from './components/login/login.component';
 import { AdminDashComponent } from './components/admin-dash/admin-dash.component';
 import { HeaderComponent } from './components/header/header.component';
 import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.component';
+import { ManageUserComponent } from './components/manage-user/manage-user.component';
+import { RoomListComponent } from './components/room-list/room-list.component';
+
 
 @NgModule({
   declarations: [
@@ -15,7 +18,9 @@ import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.
     LoginComponent,
     AdminDashComponent,
     HeaderComponent,
-    AdminSidebarComponent
+    AdminSidebarComponent,
+    ManageUserComponent,
+    RoomListComponent
   ],
   imports: [
     BrowserModule,
