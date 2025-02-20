@@ -1,4 +1,4 @@
-<aside [ngClass]="{'w-64': !collapsed, 'w-20': collapsed, 'fixed inset-y-0 z-20': isMobile(), 'absolute': !isMobile()}" 
+<aside [ngClass]="{'w-64': !collapsed, 'w-20': collapsed, 'fixed inset-y-0 z-20': isMobile(), 'absolute': !isMobile()}"
        class="bg-white text-gray-900 h-screen shadow-lg transition-all duration-300 ease-in-out border-r border-gray-200">
   <!-- Sidebar Content -->
   <div class="flex items-center justify-between p-4 border-b border-gray-300">
@@ -12,6 +12,7 @@
   <nav class="mt-5 px-2">
     <a *ngFor="let item of navItems"
        (click)="navigateTo(item.name)"
+       [ngClass]="{'bg-indigo-100 text-indigo-600': activeTab === item.name}"
        class="flex items-center p-3 rounded-md hover:bg-indigo-100 hover:text-indigo-600 transition-all cursor-pointer">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="item.icon" />
@@ -22,7 +23,7 @@
 </aside>
 
 <!-- Backdrop for Mobile -->
-<div *ngIf="!collapsed && isMobile()" 
-     class="fixed inset-0 bg-black bg-opacity-50 z-10" 
+<div *ngIf="!collapsed && isMobile()"
+     class="fixed inset-0 bg-black bg-opacity-50 z-10"
      (click)="toggleSidebar()">
 </div>

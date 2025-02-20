@@ -1,5 +1,5 @@
-import { Component, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -10,9 +10,12 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule]
 })
-export class AdminSidebarComponent {
+export class AdminSidebarComponent implements OnInit {
   // Tracks the collapsed state of the sidebar
   collapsed = false;
+
+  // Tracks the active tab
+  activeTab: string = '';
 
   // Tracks whether the screen is mobile
   isMobileScreen = false;
@@ -29,6 +32,18 @@ export class AdminSidebarComponent {
 
   constructor(private router: Router) {
     this.checkScreenSize();
+  }
+
+  ngOnInit(): void {
+    // Set initial active tab based on current route
+    this.setActiveTabFromCurrentRoute();
+
+    // Subscribe to router events to update the active tab on navigation
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.setActiveTabFromCurrentRoute();
+      }
+    });
   }
 
   // Toggles the sidebar's collapsed state
@@ -58,5 +73,16 @@ export class AdminSidebarComponent {
     if (this.isMobileScreen) {
       this.collapsed = true; // Collapse sidebar by default on mobile
     }
+  }
+
+  // Sets the active tab based on the current route
+  private setActiveTabFromCurrentRoute(): void {
+    const currentUrl = this.router.url.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+    this.navItems.forEach(item => {
+      // Check if the current URL includes the nav item's name
+      if (currentUrl.includes(item.name.toLowerCase())) {
+        this.activeTab = item.name;
+      }
+    });
   }
 }
