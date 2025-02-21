@@ -15,6 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import java.io.ByteArrayOutputStream;
+
+
 
 @Service
 public class ReservationService {
@@ -100,5 +105,55 @@ public class ReservationService {
                 reservation.getEndTime(),
                 reservation.getStatus()
         );
+    }
+
+    public byte[] generateApprovedReservationsPdf() {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Document document = new Document();
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            // Title
+            Font titleFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+            Paragraph title = new Paragraph("Approved Reservations Report", titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+            document.add(new Paragraph("\n"));
+
+            // Table with 6 columns
+            PdfPTable table = new PdfPTable(6);
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+
+            // Table Header
+            Font headFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+            table.addCell(new PdfPCell(new Phrase("User Name", headFont)));
+            table.addCell(new PdfPCell(new Phrase("Email", headFont)));
+            table.addCell(new PdfPCell(new Phrase("Classroom", headFont)));
+            table.addCell(new PdfPCell(new Phrase("Date", headFont)));
+            table.addCell(new PdfPCell(new Phrase("Start Time", headFont)));
+            table.addCell(new PdfPCell(new Phrase("End Time", headFont)));
+
+            // Fetch Approved Reservations
+            List<Reservation> reservations = reservationRepository.findByStatus(ReservationStatus.APPROVED);
+
+            for (Reservation res : reservations) {
+                table.addCell(res.getPersonne().getNom());
+                table.addCell(res.getPersonne().getEmail());
+                table.addCell(res.getLocal().getNom());
+                table.addCell(res.getDate().toString());
+                table.addCell(res.getStartTime().toString());
+                table.addCell(res.getEndTime().toString());
+            }
+
+            document.add(table);
+            document.close();
+
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating PDF", e);
+        }
     }
 }

@@ -10,6 +10,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.component';
 import { ManageUserComponent } from './components/manage-user/manage-user.component';
 import { RoomListComponent } from './components/room-list/room-list.component';
+import { AnalyticsComponent } from './components/analytics/analytics.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { RoomListComponent } from './components/room-list/room-list.component';
     HeaderComponent,
     AdminSidebarComponent,
     ManageUserComponent,
-    RoomListComponent
+    RoomListComponent,
+    AnalyticsComponent
   ],
   imports: [
     BrowserModule,

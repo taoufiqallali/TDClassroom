@@ -15,4 +15,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     boolean existsByLocal_IdLocalAndDateAndStartTimeLessThanAndEndTimeGreaterThan(
             Long localId, LocalDate date, LocalTime endTime, LocalTime startTime);
+
+
 }
+
+
+

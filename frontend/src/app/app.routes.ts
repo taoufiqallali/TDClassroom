@@ -6,6 +6,7 @@ import { ManageUserComponent } from './components/manage-user/manage-user.compon
 import { RoomListComponent } from './components/room-list/room-list.component';
 import { ReservationComponent } from './components/reservation/reservation.component';
 import { FixedResComponent } from './components/fixed-res/fixed-res.component';
+import { AnalyticsComponent } from './components/analytics/analytics.component';
 export const routes: Routes = [
 
   { path: 'rooms', component: RoomListComponent },
@@ -16,8 +17,10 @@ export const routes: Routes = [
       { path: 'users', component: ManageUserComponent },
       { path: 'reservations', component: ReservationComponent },
       { path: 'fixedres', component: FixedResComponent },
-      { path: 'classrooms', component: RoomListComponent }
+      { path: 'classrooms', component: RoomListComponent },
+      { path: 'dashboard', component: AnalyticsComponent}
 
     ]
    },
+   {path: 'login', component: LoginComponent}
 ];
