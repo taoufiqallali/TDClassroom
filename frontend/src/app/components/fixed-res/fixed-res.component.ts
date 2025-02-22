@@ -7,19 +7,23 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions } from '@fullcalendar/core';
+import { ReservationFormComponent } from '../reservation-form/reservation-form.component';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
+
 @Component({
   selector: 'app-fixed-res',
-  imports: [CommonModule, FullCalendarModule, FormsModule],
+  imports: [CommonModule, FullCalendarModule, FormsModule, ReservationFormComponent],
   templateUrl: './fixed-res.component.html',
   styleUrl: './fixed-res.component.css'
 })
 export class FixedResComponent {
 
 
+  isVisible: boolean = false;
+  
 
 
   calendarOptions: CalendarOptions = {
@@ -66,33 +70,30 @@ export class FixedResComponent {
 
   reservations: ReservationList[] = [
     {
-      "id_reservation": 1,
-      "id_utilisateur": 2,
-      "id_local": 5,
-      "date_reservation": "2025-02-19",
-      "start_time": "08:00:00",
-      "end_time": "10:01:00",
-      "duree": 4,
+      "id": 1,
+      "personneId": 2,
+      "localId": 5,
+      "date": "2025-02-19",
+      "startTime": "08:00:00",
+      "endTime": "10:01:00",
       "status": "FIXED"
     },
     {
-      "id_reservation": 2,
-      "id_utilisateur": 1,
-      "id_local": 5,
-      "date_reservation": "2025-02-10",
-      "start_time": "10:00:00",
-      "end_time": "13:00:00",
-      "duree": 3,
+      "id": 2,
+      "personneId": 1,
+      "localId": 5,
+      "date": "2025-02-10",
+      "startTime": "10:00:00",
+      "endTime": "13:00:00",
       "status": "FIXED"
     },
     {
-      "id_reservation": 3,
-      "id_utilisateur": 2,
-      "id_local": 3,
-      "date_reservation": "2025-02-21",
-      "start_time": "08:45:00",
-      "end_time": "17:45:00",
-      "duree": 1,
+      "id": 3,
+      "personneId": 2,
+      "localId": 3,
+      "date": "2025-02-21",
+      "startTime": "08:45:00",
+      "endTime": "17:45:00",
       "status": "FIXED"
     }
   ];
@@ -101,16 +102,16 @@ export class FixedResComponent {
     if (!this.selectedRoomId) return;
     // Filter reservations for selected room
     const roomEvents = this.reservations
-      .filter(res => res.id_local === Number(this.selectedRoomId))
+      .filter(res => res.localId === Number(this.selectedRoomId))
       .filter(res => res.status === 'FIXED')
       .map(reservation => ({
         title: this.getTiltle(reservation.status),
-        start: `${this.convertToCurrentWeek(reservation.date_reservation)}T${reservation.start_time}`,
-        end: `${this.convertToCurrentWeek(reservation.date_reservation)}T${reservation.end_time}`,
-        id: reservation.id_reservation.toString(),
+        start: `${this.convertToCurrentWeek(reservation.date)}T${reservation.startTime}`,
+        end: `${this.convertToCurrentWeek(reservation.date)}T${reservation.endTime}`,
+        id: reservation.id.toString(),
         color: this.getStatusColor(reservation.status), // Assign colors based on status\
         extendedProps: {
-          person: this.users.find(u => u.personneId == reservation.id_utilisateur)?.nom || 'unknown' // Adding the 'person' property here
+          person: this.users.find(u => u.personneId == reservation.personneId)?.nom || 'unknown' // Adding the 'person' property here
         }
       }));
     console.log(JSON.stringify(this.users.find(u => u.personneId == 1)));
@@ -189,7 +190,7 @@ export class FixedResComponent {
 
   loadReservations() {
     ///add code later for now it's hardcoded
-    this.localIds = this.reservations.map(reservation => reservation.id_local);
+    this.localIds = this.reservations.map(reservation => reservation.localId);
     console.log(this.localIds);
   }
 
@@ -233,19 +234,19 @@ export class FixedResComponent {
 
   isOverlapping(reservation: ReservationList): boolean {
     return this.reservations.some(other =>
-      other.id_reservation !== reservation.id_reservation &&  // Exclude itself
-      other.id_local === reservation.id_local &&  // Same location
-      other.date_reservation === reservation.date_reservation &&  // Same date
+      other.id !== reservation.id &&  // Exclude itself
+      other.localId === reservation.localId &&  // Same location
+      other.date === reservation.date &&  // Same date
       this.timesOverlap(reservation, other) // Check time overlap
     );
   }
 
   private timesOverlap(res1: ReservationList, res2: ReservationList): boolean {
-    const res1Start = this.convertToMinutes(res1.start_time);
-    const res1End = this.convertToMinutes(res1.end_time);
+    const res1Start = this.convertToMinutes(res1.startTime);
+    const res1End = this.convertToMinutes(res1.endTime);
 
-    const res2Start = this.convertToMinutes(res2.start_time);
-    const res2End = this.convertToMinutes(res2.end_time);
+    const res2Start = this.convertToMinutes(res2.startTime);
+    const res2End = this.convertToMinutes(res2.endTime);
 
     console.log(res1Start < res2End && res2Start < res1End);
     return res1Start < res2End && res2Start < res1End; // Overlapping condition

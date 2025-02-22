@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reservations")
+@CrossOrigin(origins = "http://localhost:4201", allowedHeaders = "*", allowCredentials = "true")
 public class ReservationController {
     private final ReservationService reservationService;
 

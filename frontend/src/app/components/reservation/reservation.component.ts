@@ -13,40 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ReservationComponent {
 
-  reservations : ReservationList[]=[
-    {
-      "id_reservation": 1,
-      "id_utilisateur": 19,
-      "id_local": 5,
-      "date_reservation": "2025-03-15",
-      "start_time": "08:00:00",
-      "end_time": "10:01:00",
-      "duree": 4,
-      "status": "PENDING"
-    },
-    {
-      "id_reservation": 2,
-      "id_utilisateur": 18,
-      "id_local": 5,
-      "date_reservation": "2025-03-15",
-      "start_time": "10:00:00",
-      "end_time": "13:00:00",
-      "duree": 3,
-      "status": "PENDING"
-    },
-    {
-      "id_reservation": 3,
-      "id_utilisateur": 12,
-      "id_local": 12,
-      "date_reservation": "2025-03-17",
-      "start_time": "16:45:00",
-      "end_time": "17:45:00",
-      "duree": 1,
-      "status": "APPROVED"
-    }
-  ];
-  
-
+  reservations : ReservationList[]=[];
   pending:ReservationList[]=[];
   rooms: Room_list[] = [];
   users:User_list[]=[];
@@ -56,13 +23,22 @@ export class ReservationComponent {
     this.loadUsers();
     this.loadRooms();
     this.loadReservations();
-    this.findPending();
+
   }
 
 
   loadReservations() {
-    ///add code later for now it's hardcoded
+    this.reservationService.getReservations().subscribe(
+      (reservations) => {
+        this.reservations = reservations;
+        this.pending=this.reservations.filter(res => res.status==='PENDING');
+      },  
+      (error) => {
+        console.error('Error fetching reservations:', error);
+      }
+    );
   }
+  
 
   loadRooms(): void {
     this.roomService.getRooms().subscribe(
@@ -85,12 +61,9 @@ export class ReservationComponent {
       }
     );
   }
+  
 
-  findPending(){
-    
-    this.pending=this.reservations.filter(res => res.status==='PENDING');
 
-  }
   getUserName(userId:number):string{
     const user = this.users.find(user => user.personneId == userId );
     return user?.nom+" "+user?.prenom ;
@@ -102,22 +75,43 @@ export class ReservationComponent {
   }
 
   isOverlapping(reservation: ReservationList): boolean {
+    
+    
     return this.reservations.some(other => 
-      other.id_reservation !== reservation.id_reservation &&  // Exclude itself
-      other.id_local === reservation.id_local &&  // Same location
-      other.date_reservation === reservation.date_reservation &&  // Same date
+      other.id !== reservation.id &&  // Exclude itself
+      other.localId === reservation.localId &&  // Same location
+      other.date === reservation.date &&  // Same date
       this.timesOverlap(reservation, other) // Check time overlap
     );
   }
   
+  rejectOverlappingReservations(reservation: ReservationList): void {
+    const overlappingReservations = this.pending.filter(other =>
+      other.id !== reservation.id &&
+      other.localId === reservation.localId &&
+      other.date === reservation.date &&
+      this.timesOverlap(reservation, other)
+    );
+    console.log(overlappingReservations);
+    overlappingReservations.forEach(overlappingReservation => {
+      this.rejectReservation(overlappingReservation.id);
+    });
+  
+    this.reservations = this.reservations.map(other => {
+      if (overlappingReservations.some(overlap => overlap.id === other.id)){
+        return {...other, status: 'REJECTED'};
+      }
+      return other;
+    });
+  }
+  
   private timesOverlap(res1: ReservationList, res2: ReservationList): boolean {
-    const res1Start = this.convertToMinutes(res1.start_time);
-    const res1End = this.convertToMinutes(res1.end_time);
+    const res1Start = this.convertToMinutes(res1.startTime);
+    const res1End = this.convertToMinutes(res1.endTime);
   
-    const res2Start = this.convertToMinutes(res2.start_time);
-    const res2End = this.convertToMinutes(res2.end_time);
+    const res2Start = this.convertToMinutes(res2.startTime);
+    const res2End = this.convertToMinutes(res2.endTime);
   
-    console.log(res1Start < res2End && res2Start < res1End);
     return res1Start < res2End && res2Start < res1End; // Overlapping condition
   }
   
@@ -127,8 +121,71 @@ export class ReservationComponent {
     return hours * 60 + minutes;
   }
   
-  acceptReservation(){}
-  rejectReservation(){}
+  acceptReservation(reservationID:number):void{
+    this.reservationService.changeStatus(reservationID, "APPROVED").subscribe(
+      () => {
+      },
+      (error) => {
+        console.error('Error updating status:', error);
+        // Handle the error appropriately
+      }
+    );
+
+    this.pending = this.pending.map(res => {
+      if (res.id === reservationID) {
+        return { ...res, status: "APPROVED" }; // Create a new object
+      }
+      return res;
+    });
+
+    const foundReservation = this.pending.find(res => res.id == reservationID); 
+    foundReservation && this.rejectOverlappingReservations(foundReservation);
+
+   
+
+  }
+  rejectReservation(reservationID:number){
+    this.reservationService.changeStatus(reservationID, "REJECTED").subscribe(
+      () => {
+      },
+      (error) => {
+        console.error('Error updating status:', error);
+        // Handle the error appropriately
+      }
+    );
+
+    this.pending = this.pending.map(res => {
+      if (res.id === reservationID) {
+        return { ...res, status: "REJECTED" }; // Create a new object
+      }
+      return res;
+    });  }
+
+  calculateDuration(reservation: any): string {
+    const start = reservation.startTime;
+    const end = reservation.endTime;
+  
+    // Convert strings to Date objects
+    const startDate = new Date(`1970-01-01T${start}`);
+    const endDate = new Date(`1970-01-01T${end}`);
+  
+    // Calculate duration in minutes
+    const durationMinutes = (endDate.getTime() - startDate.getTime()) / (1000 * 60);
+  
+    // Convert to hours and minutes
+    const hours = Math.floor(durationMinutes / 60);
+    const minutes = durationMinutes % 60;
+  
+    // Format result
+    if (hours > 0 && minutes > 0) {
+      return `${hours}h ${minutes}min`;
+    } else if (hours > 0) {
+      return `${hours}h`;
+    } else {
+      return `${minutes}min`;
+    }
+  }
+  
 
 }
  

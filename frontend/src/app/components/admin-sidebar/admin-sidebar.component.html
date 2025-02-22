@@ -11,7 +11,7 @@
   </div>
   <nav class="mt-5 px-2">
     <a *ngFor="let item of navItems"
-       (click)="navigateTo(item.name)"
+       (click)="navigateTo(item.path)"
        [ngClass]="{'bg-indigo-100 text-indigo-600': activeTab === item.name}"
        class="flex items-center p-3 rounded-md hover:bg-indigo-100 hover:text-indigo-600 transition-all cursor-pointer">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,3 +1,11 @@
 .bg-red-200 {
-    background-color: #fecaca !important; /* Force color */
+    background-color: #ff910063  !important; /* Force color */
   }
+.bg-green-200{
+  background-color: #51e7334b !important; /* Force color */
+
+}
+.bg-red-300{
+  background-color: #f145455e !important; /* Force color */
+
+}

@@ -3,13 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface ReservationList {
-    id_reservation: number;
-    id_utilisateur: number;  // Optional, based on your database schema
-    id_local: number;        // Optional, based on your database schema
-    date_reservation: string; // Store dates as ISO strings (YYYY-MM-DD)
-    start_time: string; // Store times as strings (HH:MM:SS)
-    end_time:string;
-    duree: number;
+    id: number;
+    personneId: number;  // Optional, based on your database schema
+    localId: number;        // Optional, based on your database schema
+    date: string; // Store dates as ISO strings (YYYY-MM-DD)
+    startTime: string; // Store times as strings (HH:MM:SS)
+    endTime:string;
     status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'FIXED'; // Restrict to enum values
   }
   
@@ -22,5 +21,16 @@ export class reservationService{
   private apiUrl = 'http://localhost:8080/api/reservations'; // Your API endpoint
 
   constructor(private http: HttpClient) {}
+
+  getReservations(): Observable<ReservationList[]> {
+    return this.http.get<ReservationList[]>(this.apiUrl);
+  }
+
+  changeStatus(id: number, status: string): Observable<void> {
+    const url = `${this.apiUrl}/${id}/status`;
+    const body = { status: status }; // Create the request body
+
+    return this.http.put<void>(url, body);
+  }
 
 }
