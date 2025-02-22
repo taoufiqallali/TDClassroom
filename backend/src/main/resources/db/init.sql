@@ -92,7 +92,7 @@ CREATE TABLE reservation (
     date DATE NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
-    status ENUM('PENDING', 'APPROVED', 'REJECTED','FIXED') NOT NULL DEFAULT 'PENDING',
+    status ENUM('PENDING', 'APPROVED', 'REJECTED', 'FIXED') NOT NULL DEFAULT 'PENDING',
     FOREIGN KEY (id_local) REFERENCES local(id_local) ON DELETE CASCADE,
     FOREIGN KEY (personne_id) REFERENCES personne(personne_id) ON DELETE CASCADE
 );

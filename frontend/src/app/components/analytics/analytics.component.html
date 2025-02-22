@@ -1,0 +1,103 @@
+<div class="min-h-screen bg-gray-50 p-4">
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-800">Tableau de bord des réservations</h1>
+    <div class="flex items-center space-x-2">
+      <label for="dateRange" class="text-sm font-medium text-gray-600">Période:</label>
+      <select
+        id="dateRange"
+        class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        (change)="onDateRangeChange($event)">
+        <option value="7">7 derniers jours</option>
+        <option value="30" selected>30 derniers jours</option>
+        <option value="90">3 derniers mois</option>
+        <option value="180">6 derniers mois</option>
+        <option value="365">Année courante</option>
+      </select>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <div class="flex justify-center items-center h-64">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500"></div>
+    </div>
+  }
+
+  @if (!isLoading) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <!-- Key Metrics Cards -->
+      <div class="bg-white rounded-lg shadow p-4 flex items-center">
+        <div class="rounded-full h-12 w-12 flex items-center justify-center bg-blue-100 text-blue-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h2 class="text-sm font-medium text-gray-500">Total Réservations</h2>
+          <p class="text-2xl font-semibold text-gray-800">{{ stats.totalReservations }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-4 flex items-center">
+        <div class="rounded-full h-12 w-12 flex items-center justify-center bg-green-100 text-green-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h2 class="text-sm font-medium text-gray-500">Approuvées</h2>
+          <p class="text-2xl font-semibold text-gray-800">{{ stats.approvedReservations }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-4 flex items-center">
+        <div class="rounded-full h-12 w-12 flex items-center justify-center bg-yellow-100 text-yellow-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h2 class="text-sm font-medium text-gray-500">En attente</h2>
+          <p class="text-2xl font-semibold text-gray-800">{{ stats.pendingReservations }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-4 flex items-center">
+        <div class="rounded-full h-12 w-12 flex items-center justify-center bg-red-100 text-red-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h2 class="text-sm font-medium text-gray-500">Rejetées</h2>
+          <p class="text-2xl font-semibold text-gray-800">{{ stats.rejectedReservations }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <!-- Status Distribution Chart -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-lg font-medium text-gray-800 mb-4">Distribution des statuts</h2>
+        <div class="h-64">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Top 5 Most Booked Rooms -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-lg font-medium text-gray-800 mb-4">Salles les plus réservées</h2>
+        <div class="h-64">
+          <canvas id="popularRoomsChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reservations by Day of Week -->
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+      <h2 class="text-lg font-medium text-gray-800 mb-4">Réservations par jour de la semaine</h2>
+      <div class="h-64">
+        <canvas id="weekdayChart"></canvas>
+      </div>
+    </div>
+  }
+</div>

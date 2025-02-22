@@ -4,16 +4,14 @@ import com.M2I.TDClassroom.dto.ReservationDto;
 import com.M2I.TDClassroom.enums.ReservationStatus;
 import com.M2I.TDClassroom.model.Local;
 import com.M2I.TDClassroom.model.Reservation;
-import com.M2I.TDClassroom.model.Equipement;
 import com.M2I.TDClassroom.model.Personne;
 import com.M2I.TDClassroom.repository.LocalRepository;
 import com.M2I.TDClassroom.repository.ReservationRepository;
 import com.M2I.TDClassroom.repository.EquipementRepository;
 import com.M2I.TDClassroom.repository.PersonneRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
@@ -107,6 +105,9 @@ public class ReservationService {
         );
     }
 
+
+
+
     public byte[] generateApprovedReservationsPdf() {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -156,4 +157,9 @@ public class ReservationService {
             throw new RuntimeException("Error generating PDF", e);
         }
     }
+
+
+
+
+
 }
