@@ -75,8 +75,6 @@ public class ReservationService {
             throw new RuntimeException("This local is already reserved for the requested time slot.");
         }
 
-        // Set status and save the reservation
-        reservationRequest.setStatus(ReservationStatus.PENDING); // Default status
         return reservationRepository.save(reservationRequest);
     }
 
