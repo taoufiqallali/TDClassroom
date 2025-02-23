@@ -1,11 +1,20 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="bg-white rounded-lg shadow-md overflow-hidden">
     <nav class="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-      <span 
-        class="font-medium text-gray-700 pb-2 -mb-4"
-      >
+      <span class="font-medium text-gray-700 pb-2 -mb-4">
         Utilisateurs
       </span>
+
+      <div class="flex flex-1 justify-center mt-2 sm:mt-0">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange()"
+          placeholder="Search users..."
+          class="w-2/3 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        />
+      </div>
+
       <div>
         <button 
           (click)="add_user()" 
@@ -34,7 +43,7 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              @for(user of users; track user.email) {
+              @for(user of groupedData; track user.email) {
                 <tr class="hover:bg-gray-50">
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{user.nom}}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{user.prenom}}</td>
@@ -75,31 +84,31 @@
   </div>
 
   <!-- Modal with transparent backdrop -->
-<div *ngIf="isVisible" class="fixed inset-0 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-  <!-- Blurred backdrop -->
-  <div class="fixed inset-0 bg-transparent backdrop-blur-sm" (click)="closeItem()"></div>
-  
-  <!-- Modal content container -->
-  <div class="relative bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 my-8 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
-    <div class="sticky top-0 bg-white z-10 flex justify-end pt-4 pr-4 border-b border-gray-100">
-      <button 
-        (click)="closeItem()" 
-        class="text-gray-400 hover:text-gray-500 focus:outline-none"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+  <div *ngIf="isVisible" class="fixed inset-0 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+    <!-- Blurred backdrop -->
+    <div class="fixed inset-0 bg-transparent backdrop-blur-sm" (click)="closeItem()"></div>
     
-    <!-- Form component with proper padding -->
-    <div class="p-6">
-      <app-user-form 
-        [userId]="selected_email" 
-        (triggercloseItem)="closeItem()" 
-        (triggersimple_notification)="simple_notification($event)"
-      ></app-user-form>
+    <!-- Modal content container -->
+    <div class="relative bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 my-8 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+      <div class="sticky top-0 bg-white z-10 flex justify-end pt-4 pr-4 border-b border-gray-100">
+        <button 
+          (click)="closeItem()" 
+          class="text-gray-400 hover:text-gray-500 focus:outline-none"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Form component with proper padding -->
+      <div class="p-6">
+        <app-user-form 
+          [userId]="selected_email" 
+          (triggercloseItem)="closeItem()" 
+          (triggersimple_notification)="simple_notification($event)"
+        ></app-user-form>
+      </div>
     </div>
   </div>
-</div>
 </div>

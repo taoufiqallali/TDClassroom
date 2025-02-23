@@ -65,4 +65,15 @@ public class ReservationController {
                 .body(pdf);
     }
 
+    @GetMapping("/csv")
+    public ResponseEntity<byte[]> downloadApprovedReservationsCsv() {
+        byte[] csvData = reservationService.generateApprovedReservationsCsv();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=approved_reservations.csv")
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(csvData);
+    }
+
+
 }

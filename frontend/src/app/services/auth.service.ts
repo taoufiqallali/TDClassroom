@@ -7,6 +7,7 @@ interface AuthResponse {
   username: string;
   authenticated: boolean;
   message: string;
+  role: string;
 }
 
 @Injectable({
@@ -25,9 +26,16 @@ export class AuthService {
   }
 
   handleSuccessfulLogin(response: AuthResponse) {
+    // Save the user data to localStorage
     localStorage.setItem('currentUser', JSON.stringify(response));
     console.log('currentUser', JSON.stringify(response));
-    this.router.navigate(['/admin-dash']); // Redirect to 'hud'
+  
+    // Check the user's role and redirect accordingly
+    if (response.role === 'ROLE_ADMIN') {
+      this.router.navigate(['/admin-dash/dashboard']); // Redirect to admin dashboard
+    } else {
+      this.router.navigate(['/user-dash']); // Redirect to user dashboard
+    }
   }
 
   logout() {

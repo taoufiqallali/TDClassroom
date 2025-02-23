@@ -1,86 +1,107 @@
 <div class="form-container">
-    <h2>{{ isEditMode ? 'Edit Room' : 'Create Room' }}</h2>
-  
-    @if (errorMessage) {
-      <div class="error-message">{{ errorMessage }}</div>
-    }
-  
-    <form (ngSubmit)="onSubmit()" #userForm="ngForm">
-      <!-- Existing Fields -->
-      <div class="form-group">
-        <label for="nom">Nom</label>
-        <input 
-          type="text" 
-          id="nom" 
-          name="nom" 
-          [(ngModel)]="room.nom" 
-          required
-          #nom="ngModel"
-          class="form-control">
-        @if (submitted && nom.invalid) {
-          <div class="error">Nom is required</div>
-        }
-      </div>
+  <h2>{{ isEditMode ? 'Edit Room' : 'Create Room' }}</h2>
 
+  @if (errorMessage) {
+    <div class="error-message">{{ errorMessage }}</div>
+  }
 
-        <div class="form-group">
-          <label for="capacite">capacite</label>
-          <input 
-            type="number" 
-            id="capacite"
-            name="capacite" 
-            [(ngModel)]="room.capacite" 
-            required
-            #capacite="ngModel"
-            class="form-control">
-          @if (submitted && capacite.invalid) {
-            <div class="error">capacite is required</div>
-          }
-        </div>
-        
-  
-      <div class="form-group">
-        <label for="accessibilitePmr">accessibilite</label>
-        <select 
-          id="accessibilitePmr" 
-          name="accessibilitePmr" 
-          [(ngModel)]="room.accessibilitePmr" 
-          required
-          #accessibilitePmr="ngModel"
-          class="form-control">
-          <option value="">Select accessibilite</option>
-          
-            <option [value]="true">available</option>
-            <option [value]="false">not available</option>
-        </select>
-        @if (submitted && accessibilitePmr.invalid) {
-          <div class="error">accessibilite is required</div>
-        }
-      </div>
-  
-  
-      <div class="form-group">
-        <label for="uniteOrganisation">Unité d'Organisation</label>
-        <input 
-          type="text" 
-          id="uniteOrganisation" 
-          name="uniteOrganisation" 
-          [(ngModel)]="room.uniteOrganisationNom" 
-          required
-          #uniteOrganisation="ngModel"
-          class="form-control">
-        @if (submitted && uniteOrganisation.invalid) {
-          <div class="error">Unité d'Organisation is required</div>
-        }
-      </div>
-  
-      <div class="form-actions">
-        <button type="submit" class="btn-submit">
-          {{ isEditMode ? 'Update' : 'Create' }}
-        </button>
-        <button type="button" class="btn-reset" (click)="resetForm()">
-          Reset
-        </button>
-      </div>
-    </form>
-  </div>
+  <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+    <!-- Nom Field -->
+    <div class="form-group">
+      <label for="nom">Nom</label>
+      <input 
+        type="text" 
+        id="nom" 
+        name="nom" 
+        [(ngModel)]="room.nom" 
+        required
+        #nom="ngModel"
+        class="form-control">
+      @if (submitted && nom.invalid) {
+        <div class="error">Nom is required</div>
+      }
+    </div>
+
+    <!-- Capacité Field -->
+    <div class="form-group">
+      <label for="capacite">Capacité</label>
+      <input 
+        type="number" 
+        id="capacite" 
+        name="capacite" 
+        [(ngModel)]="room.capacite" 
+        required
+        #capacite="ngModel"
+        class="form-control">
+      @if (submitted && capacite.invalid) {
+        <div class="error">Capacité is required</div>
+      }
+    </div>
+
+    <!-- Accessibilité PMR Field -->
+    <div class="form-group">
+      <label for="accessibilitePmr">Accessibilité PMR</label>
+      <select 
+        id="accessibilitePmr" 
+        name="accessibilitePmr" 
+        [(ngModel)]="room.accessibilitePmr" 
+        required
+        #accessibilitePmr="ngModel"
+        class="form-control">
+        <option [value]="true">Available</option>
+        <option [value]="false">Not Available</option>
+      </select>
+      @if (submitted && accessibilitePmr.invalid) {
+        <div class="error">Accessibilité PMR is required</div>
+      }
+    </div>
+
+    <!-- Unité d'Organisation Field -->
+    <div class="form-group">
+      <label for="uniteOrganisation">Unité d'Organisation</label>
+      <input 
+        type="text" 
+        id="uniteOrganisation" 
+        name="uniteOrganisation" 
+        [(ngModel)]="room.uniteOrganisationNom" 
+        required
+        #uniteOrganisation="ngModel"
+        class="form-control">
+      @if (submitted && uniteOrganisation.invalid) {
+        <div class="error">Unité d'Organisation is required</div>
+      }
+    </div>
+
+    <!-- DataShow Field -->
+    <div class="form-group">
+      <label for="datashow">DataShow</label>
+      <input 
+        type="checkbox" 
+        id="datashow" 
+        name="datashow" 
+        [(ngModel)]="room.datashow" 
+        class="form-checkbox">
+    </div>
+
+    <!-- Écran Tactile Field -->
+    <div class="form-group">
+      <label for="ecranTactile">Écran Tactile</label>
+      <input 
+        type="checkbox" 
+        id="ecranTactile" 
+        name="ecranTactile" 
+        [(ngModel)]="room.ecranTactile" 
+        class="form-checkbox">
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+      <button type="button" class="btn-reset" (click)="resetForm()">
+        Reset
+      </button>
+    </div>
+  </form>
+</div>

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,11 +36,17 @@ public class AuthController {
             // Create a session and store authentication
             request.getSession(true);
 
+            String role = authentication.getAuthorities().stream()
+                    .findFirst() // Get the first authority (role)
+                    .map(GrantedAuthority::getAuthority)
+                    .orElse("ROLE_USER");
+
             // Return user details and token if you're using one
             AuthResponse response = new AuthResponse(
                     authentication.getName(),
                     true,
-                    "Login successful"
+                    "Login successful",
+                    role
             );
 
             return ResponseEntity.ok(response);

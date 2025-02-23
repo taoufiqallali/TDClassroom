@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { roomlistservice, Room_list } from '../../services/room-list.service';
 import { RoomFormComponent } from '../room-form/room-form.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-room-list',
-  imports: [ CommonModule, RoomFormComponent],
+  imports: [CommonModule, RoomFormComponent, FormsModule],
   templateUrl: './room-list.component.html',
   styleUrl: './room-list.component.css'
 })
@@ -16,11 +17,11 @@ export class RoomListComponent implements OnInit {
   isVisible: boolean = false;
   operation_type = 0;
   rooms: Room_list[] = [];
-  selectedTabIndex: string = 'fso';  // Default to 'fso', make it dynamic if needed
+  selectedTabIndex: string = 'fso';
   roomid = '';
-
   groupedData: Room_list[] = [];
   unitelist: string[] = [];
+  searchQuery: string = '';
 
   selectTab(index: string): void {
     this.selectedTabIndex = index;
@@ -41,7 +42,7 @@ export class RoomListComponent implements OnInit {
   }
 
   edit_room(room: any) {
-    console.log(room.roomid);
+    console.log(room.idLocal);
     this.roomid = room.idLocal;
     this.operation_type = 1;
     this.isVisible = !this.isVisible;
@@ -71,13 +72,28 @@ export class RoomListComponent implements OnInit {
     this.roomService.getRooms().subscribe(
       (data: Room_list[]) => {
         this.rooms = data;
-        this.groupedData = data;
+        this.filterRooms();
         this.unitelist = [...new Set(data.map(item => item.uniteOrganisationNom))];
       },
       (error) => {
         console.error('Error fetching rooms', error);
       }
     );
+  }
+
+  filterRooms(): void {
+    if (!this.searchQuery) {
+      this.groupedData = this.rooms;
+    } else {
+      const searchTerm = this.searchQuery.toLowerCase();
+      this.groupedData = this.rooms.filter(room => 
+        room.nom.toLowerCase().includes(searchTerm)
+      );
+    }
+  }
+
+  onSearchChange(): void {
+    this.filterRooms();
   }
 
   simple_notification(Message: string) {
@@ -101,7 +117,7 @@ export class RoomListComponent implements OnInit {
     });
 
     snackBarRef.afterDismissed().subscribe(() => {
-      console.log('User deletion prompt dismissed');
+      console.log('Room deletion prompt dismissed');
     });
   }
 }

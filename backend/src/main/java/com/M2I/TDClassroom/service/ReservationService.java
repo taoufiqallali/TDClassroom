@@ -11,10 +11,13 @@ import com.M2I.TDClassroom.repository.EquipementRepository;
 import com.M2I.TDClassroom.repository.PersonneRepository;
 import org.springframework.stereotype.Service;
 
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.opencsv.*;
 import java.io.ByteArrayOutputStream;
 
 
@@ -156,8 +159,37 @@ public class ReservationService {
         }
     }
 
+        public byte[] generateApprovedReservationsCsv() {
+            try {
+                StringWriter writer = new StringWriter();
+                CSVWriter csvWriter = new CSVWriter(writer);
 
+                // Header row
+                String[] header = {"User Name", "Email", "Classroom", "Date", "Start Time", "End Time"};
+                csvWriter.writeNext(header);
 
+                // Fetch approved reservations
+                List<Reservation> reservations = reservationRepository.findByStatus(ReservationStatus.APPROVED);
 
+                for (Reservation res : reservations) {
+                    String[] row = {
+                            res.getPersonne().getNom(),
+                            res.getPersonne().getEmail(),
+                            res.getLocal().getNom(),
+                            res.getDate().toString(),
+                            res.getStartTime().toString(),
+                            res.getEndTime().toString()
+                    };
+                    csvWriter.writeNext(row);
+                }
+
+                csvWriter.close();
+                return writer.toString().getBytes(StandardCharsets.UTF_8);
+            } catch (Exception e) {
+                throw new RuntimeException("Error generating CSV", e);
+            }
+        }
 
 }
+
+

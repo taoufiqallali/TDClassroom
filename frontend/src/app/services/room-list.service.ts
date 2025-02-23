@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Room_list {
-    idLocal:number,
-    nom: string,
-    capacite: number,
-    accessibilitePmr: string,
-    uniteOrganisationNom:string,
+  idLocal: number;
+  nom: string;
+  capacite: number;
+  accessibilitePmr: boolean;
+  uniteOrganisationNom: string;
+  datashow: boolean; // New field
+  ecranTactile: boolean; // New field
 }
 
 @Injectable({

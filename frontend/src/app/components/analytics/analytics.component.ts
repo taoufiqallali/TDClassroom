@@ -204,4 +204,37 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     this.dateRange = select.value;
     this.loadDashboardData();
   }
+
+  downloadPDF() {
+    fetch('http://localhost:8080/api/reservations/pdf')
+      .then(response => response.blob())
+      .then(blob => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'approved_reservations.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+      })
+      .catch(error => console.error('Error downloading PDF:', error));
+  }
+  
+
+  downloadCSV() {
+    fetch('http://localhost:8080/api/reservations/csv')
+      .then(response => response.blob()) // Convert response to a blob
+      .then(blob => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'approved_reservations.csv'; // Set the filename
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(link.href);
+      })
+      .catch(error => console.error('Error downloading CSV:', error));
+  }
+  
+  
 }

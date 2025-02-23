@@ -7,6 +7,7 @@ import { RoomListComponent } from './components/room-list/room-list.component';
 import { ReservationComponent } from './components/reservation/reservation.component';
 import { FixedResComponent } from './components/fixed-res/fixed-res.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
+import { UserDashComponent } from './components/user-dash/user-dash.component';
 
 export const routes: Routes = [
 
@@ -23,5 +24,7 @@ export const routes: Routes = [
 
     ]
    },
-   {path: 'login', component: LoginComponent}
+   {path: 'user-dash', component: UserDashComponent},
+   {path: 'login', component: LoginComponent},
+   {path: '**', component: LoginComponent}
 ];

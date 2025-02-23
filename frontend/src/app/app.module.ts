@@ -11,6 +11,7 @@ import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.
 import { ManageUserComponent } from './components/manage-user/manage-user.component';
 import { RoomListComponent } from './components/room-list/room-list.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
+import { UserDashComponent } from './components/user-dash/user-dash.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { AnalyticsComponent } from './components/analytics/analytics.component';
     AdminSidebarComponent,
     ManageUserComponent,
     RoomListComponent,
-    AnalyticsComponent
+    AnalyticsComponent,
+    UserDashComponent
   ],
   imports: [
     BrowserModule,
