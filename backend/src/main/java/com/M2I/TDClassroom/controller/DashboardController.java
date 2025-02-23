@@ -1,6 +1,7 @@
 package com.M2I.TDClassroom.controller;
 
 import com.M2I.TDClassroom.dto.DashboardStats;
+import com.M2I.TDClassroom.dto.UserStats;
 import com.M2I.TDClassroom.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,5 +17,10 @@ public class DashboardController {
     @GetMapping("/stats")
     public DashboardStats getDashboardStats(@RequestParam(defaultValue = "30") int days) {
         return dashboardService.getDashboardStats(days);
+    }
+
+    @GetMapping("/userstats")
+    public UserStats getUserStats(@RequestParam String username) {
+        return dashboardService.getUserStats(username);
     }
 }

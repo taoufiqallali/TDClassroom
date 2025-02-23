@@ -53,7 +53,7 @@ export class UserReservationsComponent {
       "date": "2025-02-19",
       "startTime": "08:00:00",
       "endTime": "10:01:00",
-      "duree": 4,
+      //"duree": 4,
       "status": "APPROVED"
     },
     {
@@ -63,7 +63,7 @@ export class UserReservationsComponent {
       "date": "2025-02-20",
       "startTime": "10:00:00",
       "endTime": "13:00:00",
-      "duree": 3,
+      //"duree": 3,
       "status": "PENDING"
     },
     {
@@ -73,7 +73,7 @@ export class UserReservationsComponent {
       "date": "2025-02-21",
       "startTime": "08:45:00",
       "endTime": "17:45:00",
-      "duree": 1,
+      //"duree": 1,
       "status": "APPROVED"
     }
   ];

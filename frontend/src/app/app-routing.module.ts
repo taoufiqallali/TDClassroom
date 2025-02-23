@@ -4,6 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AdminDashComponent } from './components/admin-dash/admin-dash.component';
 import { ManageUserComponent } from './components/manage-user/manage-user.component';
 import { UserDashComponent } from './components/user-dash/user-dash.component';
+import { userAnalytics } from './components/user-analytics/user-analytics.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -18,7 +19,7 @@ const routes: Routes = [
     { 
       path: 'user-dash', component: UserDashComponent, 
       children: [
-        { path: 'users', component: ManageUserComponent }
+        { path: 'dashboard', component: userAnalytics }
       ]
     },
 ];

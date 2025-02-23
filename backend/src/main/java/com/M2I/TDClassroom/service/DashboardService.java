@@ -3,6 +3,7 @@ package com.M2I.TDClassroom.service;
 import com.M2I.TDClassroom.dto.DashboardStats;
 import com.M2I.TDClassroom.dto.DayReservationCount;
 import com.M2I.TDClassroom.dto.RoomBookingCount;
+import com.M2I.TDClassroom.dto.UserStats;
 import com.M2I.TDClassroom.enums.ReservationStatus;
 import com.M2I.TDClassroom.model.Reservation;
 import com.M2I.TDClassroom.repository.ReservationRepository;
@@ -107,4 +108,30 @@ public class DashboardService {
             case SUNDAY -> "Dimanche";
         };
     }
+
+    public UserStats getUserStats(String email) {
+        // Fetch all reservations for the user
+        List<Reservation> userReservations = reservationRepository.findByPersonne_Email(email);
+
+        // Calculate statistics
+        UserStats stats = new UserStats();
+
+        // Total reservations
+        stats.setTotalReservations(userReservations.size());
+
+        // Group reservations by status
+        Map<ReservationStatus, Long> statusCounts = userReservations.stream()
+                .collect(Collectors.groupingBy(
+                        Reservation::getStatus,
+                        Collectors.counting()
+                ));
+
+        // Set counts for each status
+        stats.setPendingReservations(statusCounts.getOrDefault(ReservationStatus.PENDING, 0L));
+        stats.setApprovedReservations(statusCounts.getOrDefault(ReservationStatus.APPROVED, 0L));
+        stats.setRejectedReservations(statusCounts.getOrDefault(ReservationStatus.REJECTED, 0L));
+
+        return stats;
+    }
+
 }

@@ -14,6 +14,7 @@ public class AuthResponse {
     private String message;
     private String role;
 
+
     public AuthResponse(String username, boolean authenticated, String message) {
         this.username = username;
         this.authenticated = authenticated;

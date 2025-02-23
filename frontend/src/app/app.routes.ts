@@ -8,6 +8,8 @@ import { ReservationComponent } from './components/reservation/reservation.compo
 import { FixedResComponent } from './components/fixed-res/fixed-res.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
 import { UserDashComponent } from './components/user-dash/user-dash.component';
+import { UserReservationsComponent } from './components/user-reservations/user-reservations.component';
+import { UserAnalytics } from './components/user-analytics/user-analytics.component';
 
 export const routes: Routes = [
 
@@ -24,7 +26,12 @@ export const routes: Routes = [
 
     ]
    },
-   {path: 'user-dash', component: UserDashComponent},
+   {path: 'user-dash', component: UserDashComponent,
+    children: [
+      {path: 'dashboard', component: UserAnalytics},
+      {path: 'reservations', component: UserReservationsComponent}
+    ]
+   },
    {path: 'login', component: LoginComponent},
    {path: '**', component: LoginComponent}
 ];
