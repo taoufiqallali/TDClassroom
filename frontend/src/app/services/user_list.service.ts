@@ -9,6 +9,7 @@ export interface User_list {
   email: string;
   tel: string;
   grade: string;
+  roles:string[];
 }
 
 @Injectable({

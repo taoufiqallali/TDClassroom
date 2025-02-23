@@ -11,6 +11,7 @@ import { UserDashComponent } from './components/user-dash/user-dash.component';
 import { UserReservationsComponent } from './components/user-reservations/user-reservations.component';
 import { UserAnalytics } from './components/user-analytics/user-analytics.component';
 
+
 export const routes: Routes = [
 
   { path: 'rooms', component: RoomListComponent },
@@ -26,6 +27,7 @@ export const routes: Routes = [
 
     ]
    },
+
    {path: 'user-dash', component: UserDashComponent,
     children: [
       {path: 'dashboard', component: UserAnalytics},
@@ -35,3 +37,4 @@ export const routes: Routes = [
    {path: 'login', component: LoginComponent},
    {path: '**', component: LoginComponent}
 ];
+

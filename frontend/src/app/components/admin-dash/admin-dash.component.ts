@@ -6,27 +6,27 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dash',
-  templateUrl: './admin-dash.component.html',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, AdminSidebarComponent, RouterModule] // Add CommonModule
+  imports: [CommonModule, HeaderComponent, AdminSidebarComponent, RouterModule], // Ajout de CommonModule
+  templateUrl: './admin-dash.component.html'
 })
 export class AdminDashComponent {
-  // Add missing properties
-  sidebarCollapsed = false;
-  isMobile = false;
+  // Propriétés ajoutées
+  sidebarCollapsed = false; // Indique si la barre latérale est réduite ou non
+  isMobile = false; // Indique si l'écran est de type mobile ou non
 
   constructor() {
-    this.checkScreenSize(); // Check screen size on initialization
+    this.checkScreenSize(); // Vérifie la taille de l'écran lors de l'initialisation du composant
   }
 
-  // Listen for window resize events
+  // Écoute les événements de redimensionnement de la fenêtre
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-    this.checkScreenSize();
+    this.checkScreenSize(); // Vérifie la taille de l'écran lors du redimensionnement
   }
 
-  // Method to check screen size
+  // Méthode pour vérifier la taille de l'écran
   checkScreenSize() {
-    this.isMobile = window.innerWidth < 768; // Adjust breakpoint as needed
+    this.isMobile = window.innerWidth < 768; // Définit isMobile à true si la largeur de la fenêtre est inférieure à 768 pixels, sinon à false
   }
 }

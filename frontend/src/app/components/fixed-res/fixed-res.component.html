@@ -1,70 +1,61 @@
-
-
 <div class="container mx-auto p-4 h-screen flex flex-col">
-    <!-- Dropdown Section -->
-    <div class="mb-6">
-      <label for="roomSelect" class="block text-sm font-medium text-gray-700 mb-2">
-        Select Room
-      </label>
-      <select
-        id="roomSelect"
-        [(ngModel)]="selectedRoomId"
-        (ngModelChange)="onRoomChange()"
-        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5"
-      >
-        <option value="">Select a room</option>
-        <option *ngFor="let room of rooms" [value]="room.idLocal">
-          {{ room.nom }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Calendar Section -->
-    <div class="flex-1" *ngIf="selectedRoomId">
-      <full-calendar
-        [options]="calendarOptions"
-        class="h-full"
-      ></full-calendar>
-    </div>
+  <!-- Header Section -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold text-gray-900">Confirmed Reservations</h1>
+    <button (click)="add_reservation_FIXED()"  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      Permanent Reservation
+    </button>
+    <button (click)="add_reservation_APPROVED()"  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      One Time Reservation
+    </button>
   </div>
 
+  <!-- Dropdown Section -->
+  <div class="mb-6">
+    <label for="roomSelect" class="block text-sm font-medium text-gray-700 mb-2">
+      Select Room
+    </label>
+    <select id="roomSelect" [(ngModel)]="selectedRoomId" (ngModelChange)="onRoomChange()"
+      class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5">
+      <option value="">Select a room</option>
+      <option *ngFor="let room of rooms" [value]="room.idLocal">
+        {{ room.nom }}
+      </option>
+    </select>
+  </div>
 
+  <!-- Calendar Section -->
+  <div class="flex-1" *ngIf="selectedRoomId">
+    <full-calendar #calendar [options]="calendarOptions" class="h-full"></full-calendar>
+  </div>
+</div>
 
-
-
-
-
-
-<!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-    <div *ngFor="let reservation of pending"
-         [class.bg-red-200]="isOverlapping(reservation)"
-         class="bg-white shadow-lg rounded-lg p-4 border border-gray-200 transition">
+<div *ngIf="isVisible" class="fixed inset-0 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+  <!-- Blurred backdrop -->
+  <div class="fixed inset-0 bg-transparent backdrop-blur-sm" (click)="closeItem()"></div>
   
-      <h2 class="text-xl font-bold text-gray-800">Reservation #{{ reservation.id }}</h2>
-      <p class="text-gray-600 text-sm">Status: <span class="font-semibold capitalize">{{ reservation.status }}</span></p>
-  
-      <div class="mt-2">
-        <p><strong>Date:</strong> {{ reservation.date }}</p>
-        <p><strong>start Time:</strong> {{ reservation.startTime }}</p>
-        <p><strong>end Time:</strong> {{ reservation.endTime }}</p>
-        <p><strong>Duration:</strong> {{ reservation.duree }} hour(s)</p>
-        <p><strong>User Name:</strong> {{ getUserName(reservation.personneId) }}</p>
-        <p><strong>Local ID:</strong> {{ getLocalName(reservation.localId )}}</p>
-      </div>
-  
-      <div class="mt-4 flex space-x-2">
-        
-        <button *ngIf="reservation.status === 'PENDING'"
-                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                (click)="acceptReservation()">
-          Accept
-        </button>
-        <button *ngIf="reservation.status === 'PENDING'"
-                class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                (click)="rejectReservation()">
-          Reject
-        </button>
-      </div>
-  
+  <!-- Modal content container -->
+  <div class="relative bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 my-8 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <div class="sticky top-0 bg-white z-10 flex justify-end pt-4 pr-4 border-b border-gray-100">
+      <button 
+        (click)="closeItem()" 
+        class="text-gray-400 hover:text-gray-500 focus:outline-none"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
-  </div> -->
+    
+    <!-- Form component with proper padding -->
+    <div class="p-6">
+      <app-reservation-form
+        [resStatus]="resType"
+        [title]="formTitle"
+        [defaultRoom]="defaultRoom"
+        (triggercloseItem)="closeItem()" 
+        (triggersimple_notification)="simple_notification($event)"
+      ></app-reservation-form>
+    </div>
+  </div>
+</div>

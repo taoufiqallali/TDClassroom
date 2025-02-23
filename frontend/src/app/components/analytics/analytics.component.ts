@@ -20,6 +20,7 @@ interface DashboardStats {
   styleUrls: ['./analytics.component.css']
 })
 export class AnalyticsComponent implements OnInit, OnDestroy {
+  // Propriétés du composant
   stats: DashboardStats = {
     totalReservations: 0,
     pendingReservations: 0,
@@ -30,35 +31,36 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     reservationsByDay: []
   };
 
-  private apiUrl = 'http://localhost:8080/api/dashboard/stats';
-  isLoading = true;
-  dateRange = '30';
-  private charts: Chart[] = [];
+  private apiUrl = 'http://localhost:8080/api/dashboard/stats'; // URL de l'API pour récupérer les statistiques du tableau de bord
+  isLoading = true; // Indique si les données sont en cours de chargement
+  dateRange = '30'; // Plage de dates pour les statistiques (par défaut : 30 jours)
+  private charts: Chart[] = []; // Tableau pour stocker les instances de Chart.js
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    this.loadDashboardData(); // Charge les données du tableau de bord lors de l'initialisation du composant
   }
 
   ngOnDestroy(): void {
-    // Cleanup charts to prevent memory leaks
+    // Nettoie les graphiques pour éviter les fuites de mémoire
     this.charts.forEach(chart => chart.destroy());
   }
 
+  // Méthode pour charger les données du tableau de bord
   loadDashboardData(): void {
     this.isLoading = true;
-    // Clear existing charts
+    // Efface les graphiques existants
     this.charts.forEach(chart => chart.destroy());
     this.charts = [];
 
     this.http.get<DashboardStats>(`${this.apiUrl}?days=${this.dateRange}`)
-    .subscribe({
+      .subscribe({
         next: (data) => {
           this.stats = data;
           this.isLoading = false;
           setTimeout(() => {
-            this.renderCharts();
+            this.renderCharts(); // Rend les graphiques après le chargement des données
           }, 100);
         },
         error: (err) => {
@@ -68,12 +70,14 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Méthode pour rendre tous les graphiques
   renderCharts(): void {
-    this.renderStatusChart();
-    this.renderPopularRoomsChart();
-    this.renderWeekdayChart();
+    this.renderStatusChart(); // Rend le graphique des statuts de réservation
+    this.renderPopularRoomsChart(); // Rend le graphique des salles les plus réservées
+    this.renderWeekdayChart(); // Rend le graphique des réservations par jour de la semaine
   }
 
+  // Méthode pour rendre le graphique des statuts de réservation
   renderStatusChart(): void {
     const ctx = document.getElementById('statusChart') as HTMLCanvasElement;
     if (!ctx) return;
@@ -90,10 +94,10 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
             this.stats.fixedReservations
           ],
           backgroundColor: [
-            '#10B981', // green for approved
-            '#F59E0B', // amber for pending
-            '#EF4444', // red for rejected
-            '#6366F1'  // indigo for fixed
+            '#10B981', // vert pour approuvé
+            '#F59E0B', // ambre pour en attente
+            '#EF4444', // rouge pour rejeté
+            '#6366F1'  // indigo pour fixe
           ],
           borderWidth: 0
         }]
@@ -112,6 +116,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     this.charts.push(chart);
   }
 
+  // Méthode pour rendre le graphique des salles les plus réservées
   renderPopularRoomsChart(): void {
     const ctx = document.getElementById('popularRoomsChart') as HTMLCanvasElement;
     if (!ctx) return;
@@ -154,6 +159,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     this.charts.push(chart);
   }
 
+  // Méthode pour rendre le graphique des réservations par jour de la semaine
   renderWeekdayChart(): void {
     const ctx = document.getElementById('weekdayChart') as HTMLCanvasElement;
     if (!ctx) return;
@@ -199,10 +205,11 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     this.charts.push(chart);
   }
 
+  // Méthode pour gérer le changement de plage de dates
   onDateRangeChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.dateRange = select.value;
-    this.loadDashboardData();
+    this.loadDashboardData(); // Recharge les données avec la nouvelle plage de dates
   }
 
   downloadPDF() {

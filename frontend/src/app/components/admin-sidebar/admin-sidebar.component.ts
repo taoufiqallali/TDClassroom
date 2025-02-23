@@ -11,59 +11,83 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule]
 })
 export class AdminSidebarComponent implements OnInit {
-  collapsed = false;
-  activeTab: string = '';
-  isMobileScreen = false;
 
+  // Propriétés de suivi de l'état de la barre latérale
+  collapsed = false; // Indique si la barre latérale est réduite ou non
+  activeTab: string = ''; // Indique l'onglet actif
+  isMobileScreen = false; // Indique si l'écran est de type mobile
+
+  // Tableau des éléments de navigation avec leurs icônes correspondantes
   navItems = [
-    { name: 'Dashboard', path: 'dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { name: 'Users', path: 'users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
-    { name: 'Classrooms', path: 'classrooms', icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' },
-    { name: 'Equipment', path: 'equipment', icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4' },
-    { name: 'Reservations', path: 'reservations', icon: 'M8 7V3m8 4V3m-9 8h10m-10 4h6m-9 8h18a2 2 0 002-2V5a2 2 0 00-2 2H3a2 2 0 00-2 2v14a2 2 0 002 2z' },
-    { name: 'Fixed Reservations', path: 'fixedres', icon: 'M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' },
-    { name: 'Settings', path: 'settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' }
+    { name: 'Dashboard', path: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+    { name: 'Users', path: 'Users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
+    { name: 'Classrooms', path: 'Classrooms', icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' },
+    { name: 'Equipment', path: 'Equipment', icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4' },
+    { name: 'Pending Reservations', path: 'Reservations', icon: 'M8 7V3m8 4V3m-9 8h10m-10 4h6m-9 8h18a2 2 0 002-2V5a2 2 0 00-2 2H3a2 2 0 00-2 2v14a2 2 0 002 2z' },
+    { name: 'Confirmed Reservations', path: 'fixedres', icon: 'M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' },
+    { name: 'Settings', path: 'Settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' }
+
   ];
 
   constructor(private router: Router) {
-    this.checkScreenSize();
+    this.checkScreenSize(); // Vérifie la taille de l'écran lors de l'initialisation
   }
 
   ngOnInit(): void {
-    this.setActiveTabFromCurrentRoute();
-    this.router.events.subscribe((event) => {
+    this.setActiveTabFromCurrentRoute(); // Définit l'onglet actif initialement basé sur l'URL actuelle
+    this.router.events.subscribe((event) => { // S'abonne aux événements du routeur pour mettre à jour l'onglet actif lors de la navigation
+
       if (event instanceof NavigationEnd) {
         this.setActiveTabFromCurrentRoute();
       }
     });
   }
 
+
+  // Méthode pour basculer l'état réduit de la barre latérale
+
   toggleSidebar() {
     this.collapsed = !this.collapsed;
   }
+
+
+  // Méthode pour naviguer vers l'itinéraire spécifié
 
   navigateTo(route: string) {
     this.router.navigate([`/admin-dash/${route.toLowerCase()}`]);
   }
 
+
+  // Méthode pour vérifier si l'écran est de type mobile
+
   isMobile(): boolean {
     return this.isMobileScreen;
   }
 
+
+  // Écoute les événements de redimensionnement de la fenêtre
+
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
-    this.checkScreenSize();
+    this.checkScreenSize(); // Met à jour l'état de l'écran mobile lors du redimensionnement
   }
 
+
+  // Méthode privée pour mettre à jour l'état de l'écran mobile
   private checkScreenSize() {
-    this.isMobileScreen = window.innerWidth < 768;
+    this.isMobileScreen = window.innerWidth < 768; // 768px est le point de rupture pour mobile
     if (this.isMobileScreen) {
-      this.collapsed = true;
+      this.collapsed = true; // Réduit la barre latérale par défaut sur mobile
     }
   }
 
+  // Méthode privée pour définir l'onglet actif basé sur l'URL actuelle
   private setActiveTabFromCurrentRoute(): void {
-    const currentUrl = this.router.url.toLowerCase();
-    this.activeTab = this.navItems.find(item => currentUrl.includes(item.path.toLowerCase()))?.name || '';
+    const currentUrl = this.router.url.toLowerCase(); // Convertit l'URL en minuscules pour une comparaison insensible à la casse
+    this.navItems.forEach(item => {
+      if (currentUrl.includes(item.path.toLowerCase())) { // Vérifie si l'URL actuelle inclut le nom de l'élément de navigation
+        this.activeTab = item.name;
+      }
+    });
   }
 }

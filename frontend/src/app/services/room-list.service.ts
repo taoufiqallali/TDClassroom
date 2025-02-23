@@ -3,13 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Room_list {
-  idLocal: number;
+
+  idLocal: number; // or bigint if your environment supports it
+  id_unite?: number; // or bigint if your environment supports it and make it optional
   nom: string;
   capacite: number;
-  accessibilitePmr: boolean;
-  uniteOrganisationNom: string;
-  datashow: boolean; // New field
-  ecranTactile: boolean; // New field
+  accessibilitePmr: string; // or number (0 or 1) depending on how tinyint(1) is represented
+  datashow?: string; // or number (0 or 1) depending on how tinyint(1) is represented and make it optional
+  ecranTactile?: string; // or number (0 or 1) depending on how tinyint(1) is represented and make it optional
+
 }
 
 @Injectable({

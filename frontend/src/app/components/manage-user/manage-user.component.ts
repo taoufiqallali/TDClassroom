@@ -14,15 +14,19 @@ interface User {
   email: string;
   tel: string;
   grade: string;
+  roles: string[];
 }
 
 @Component({
   selector: 'app-manage-user',
+
   imports: [CommonModule, HttpClientModule, UserFormComponent, FormsModule],
+
   templateUrl: './manage-user.component.html',
   styleUrl: './manage-user.component.css'
 })
 export class ManageUserComponent implements OnInit {
+
   users: User_list[] = [];
   searchQuery: string = '';
   groupedData: User_list[] = [];
@@ -38,11 +42,16 @@ export class ManageUserComponent implements OnInit {
     private userCreateService: UserCreateService
   ) {}
 
+
   ngOnInit(): void {
+    // Charge les utilisateurs lors de l'initialisation du composant
     this.loadUsers();
   }
 
+
+  // Méthodes de gestion de l'interface utilisateur
   closeItem() {
+    // Ferme le formulaire de création/édition et réinitialise les propriétés
     this.operation_type = 0;
     this.selected_email = '';
     this.isVisible = false;
@@ -50,6 +59,9 @@ export class ManageUserComponent implements OnInit {
   }
 
   add_user(): void {
+
+    // Affiche le formulaire de création d'utilisateur
+
     this.selected_email = '';
     this.operation_type = 0;
     this.isVisible = !this.isVisible;
@@ -57,6 +69,9 @@ export class ManageUserComponent implements OnInit {
   }
 
   editUser(user: any) {
+
+    // Affiche le formulaire d'édition pour l'utilisateur sélectionné
+
     this.selected_email = user.email;
     this.operation_type = 1;
     this.isVisible = !this.isVisible;
@@ -64,7 +79,10 @@ export class ManageUserComponent implements OnInit {
   }
 
   confirmDeleteUser(user: any) {
-    const snackBarRef = this.snackBar.open('Are you sure you want to delete this user?', 'Yes', {
+
+    // Affiche une confirmation de suppression de l'utilisateur
+    const snackBarRef = this.snackBar.open('Êtes-vous sûr de vouloir supprimer cet utilisateur ?', 'Oui', {
+
       duration: 5000,
       panelClass: ['centered-snackbar'],
       horizontalPosition: 'center',
@@ -72,48 +90,63 @@ export class ManageUserComponent implements OnInit {
     });
 
     snackBarRef.onAction().subscribe(() => {
+
+      // Supprime l'utilisateur si l'action "Oui" est confirmée
+
       this.deleteUser(user);
     });
 
     snackBarRef.afterDismissed().subscribe(() => {
-      console.log('User deletion prompt dismissed');
+
+      // Logique optionnelle après la fermeture de la notification
+      console.log('Invite de suppression d\'utilisateur ignorée');
     });
   }
 
+  // Méthodes de gestion des données
   deleteUser(user: any) {
+    // Supprime l'utilisateur via le service UserCreateService
     this.userCreateService.deleteUser(user.personneId).subscribe(
       (response) => {
-        console.log('User deleted:', response);
-        this.simple_notification(`user deleted! ✅`);
+        // Succès de la suppression
+        console.log('Utilisateur supprimé:', response);
+        this.simple_notification(`utilisateur supprimé! ✅`);
         this.loadUsers();
       },
       (error) => {
-        console.error('Error deleting user:', error);
-        this.simple_notification(`error deleting user ❌`);
+        // Erreur lors de la suppression
+        console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+        this.simple_notification(`erreur lors de la suppression de l'utilisateur ❌`);
         this.loadUsers();
       }
     );
   }
 
   loadUsers(): void {
+
+    // Charge la liste des utilisateurs à partir du service UserService
     this.userService.getUsers().subscribe(
       (data: User[]) => {
-        this.users = data;
-        this.filterUsers(); // Apply initial filtering
+        // Filtre les utilisateurs pour exclure les administrateurs
+        this.users = data.filter(u => !u.roles.includes('ADMIN'));
       },
       (error) => {
-        console.error('Error fetching users', error);
+        console.error('Erreur lors de la récupération des utilisateurs', error);
       }
     );
   }
 
+
+  // Méthode de notification simple
   simple_notification(Message: string) {
-    this.snackBar.open(Message, 'Close', {
+    // Affiche une notification avec le message donné
+    this.snackBar.open(Message, 'Fermer', {
       duration: 3000,
       verticalPosition: 'top',
       horizontalPosition: 'center'
     });
   }
+
 
   filterUsers(): void {
     if (!this.searchQuery) {
@@ -131,4 +164,5 @@ export class ManageUserComponent implements OnInit {
   onSearchChange(): void {
     this.filterUsers();
   }
+
 }

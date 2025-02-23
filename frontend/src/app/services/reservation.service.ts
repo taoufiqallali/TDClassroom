@@ -33,4 +33,31 @@ export class reservationService{
     return this.http.put<void>(url, body);
   }
 
+  createReservation(reservation:ReservationList):Observable<string>{
+    const payload = {
+      local:{
+          "idLocal": reservation.localId
+      },
+      personne:{
+          "personneId": reservation.personneId
+      },
+      date: reservation.date,
+      startTime: reservation.startTime,
+      endTime: reservation.endTime,
+      status: reservation.status
+}
+
+
+
+return this.http.post(this.apiUrl, payload,{ responseType: 'text' });
+
+
+}
+deleteReservation(id: number): Observable<void> {
+  const url = `${this.apiUrl}/${id}`;
+
+  return this.http.delete<void>(url);
+  
+}
+
 }

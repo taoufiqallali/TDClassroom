@@ -13,6 +13,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
 
+
 @Component({
   selector: 'app-fixed-res',
   imports: [CommonModule, FullCalendarModule, FormsModule, ReservationFormComponent],
@@ -21,250 +22,309 @@ import interactionPlugin from '@fullcalendar/interaction';
 })
 export class FixedResComponent {
 
+  constructor(private snackBar: MatSnackBar, private roomService: roomlistservice, private userService: UserService, private reservationService: reservationService) { }
 
-  isVisible: boolean = false;
-  
-
-
-  calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-    initialView: 'timeGridWeek',
-    height: 'auto',
-    headerToolbar: {
-      left: '',
-      center: 'title',
-      right: ''
-    },
-    slotMinTime: '08:00:00',
-    slotMaxTime: '18:00:00',
-    allDaySlot: false,
-    weekends: true,
-    events: [],
-    eventClick: this.handleEventClick.bind(this),
-    firstDay: 1, // Start from Monday (0 = Sunday, 1 = Monday, etc.)
-    validRange: { start: '2025-02-17', end: '2025-02-24' }, // Forces a static week
-    selectable: true,
-    editable: false,
-    eventContent: (arg) => {
-      // Access extendedProps (person data in this case)
-      const person = arg.event.extendedProps['person'] || 'Unknown person';
-  
-      return {
-        html: `
-          <div class="custom-event">
-            <h4>${arg.event.title}</h4>
-            <br>
-            <p>Person: ${person}</p>
-          </div>`
-      };}
-  };
-
-
-  handleDateClick(arg: any) {
-    alert('date click! ' + arg.dateStr)
-  }
-
-  handleEventClick(info: any) {
-    alert(`Event: ${info.event.title}`);
-  }
-
-  reservations: ReservationList[] = [
-    {
-      "id": 1,
-      "personneId": 2,
-      "localId": 5,
-      "date": "2025-02-19",
-      "startTime": "08:00:00",
-      "endTime": "10:01:00",
-      "status": "FIXED"
-    },
-    {
-      "id": 2,
-      "personneId": 1,
-      "localId": 5,
-      "date": "2025-02-10",
-      "startTime": "10:00:00",
-      "endTime": "13:00:00",
-      "status": "FIXED"
-    },
-    {
-      "id": 3,
-      "personneId": 2,
-      "localId": 3,
-      "date": "2025-02-21",
-      "startTime": "08:45:00",
-      "endTime": "17:45:00",
-      "status": "FIXED"
-    }
-  ];
-
-  onRoomChange() {
-    if (!this.selectedRoomId) return;
-    // Filter reservations for selected room
-    const roomEvents = this.reservations
-      .filter(res => res.localId === Number(this.selectedRoomId))
-      .filter(res => res.status === 'FIXED')
-      .map(reservation => ({
-        title: this.getTiltle(reservation.status),
-        start: `${this.convertToCurrentWeek(reservation.date)}T${reservation.startTime}`,
-        end: `${this.convertToCurrentWeek(reservation.date)}T${reservation.endTime}`,
-        id: reservation.id.toString(),
-        color: this.getStatusColor(reservation.status), // Assign colors based on status\
-        extendedProps: {
-          person: this.users.find(u => u.personneId == reservation.personneId)?.nom || 'unknown' // Adding the 'person' property here
-        }
-      }));
-    console.log(JSON.stringify(this.users.find(u => u.personneId == 1)));
-    // Update calendar events
-    this.calendarOptions.events = roomEvents;
-    //this.calendarOptions.eventContent='test content';
-
-
-  }
-
-  private getTiltle(status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'FIXED'): string {
-    const titles = {
-      PENDING: 'Pending for ADMIN approval',  // Orange
-      APPROVED: 'Approved reservation!', // Green
-      REJECTED: 'Rejected by the ADMIN',  // Red
-      FIXED: 'fixed reservation' // gray
-    };
-    return titles[status];
-  }
-
-  private getStatusColor(status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'FIXED'): string {
-    const colors = {
-      PENDING: '#FFA500',  // Orange
-      APPROVED: '#4CAF50', // Green
-      REJECTED: '#F44336',  // Red
-      FIXED: '#2a272ed6' // gray
-    };
-    return colors[status];
-  }
-
-  removeMiddaySlots() {
-    setTimeout(() => {
-      const slotsToHide = ["12:00:00", "12:30:00", "13:00:00", "13:30:00"];
-      slotsToHide.forEach(time => {
-        document.querySelectorAll(`.fc-timegrid-slot[data-time="${time}"]`).forEach(slot => {
-          slot.parentElement?.classList.add("hidden");
-        });
-      });
-    }, 100); // Slight delay to ensure DOM is rendered
-  }
-
-
-  convertToCurrentWeek(dateStr: string): string {
-    const inputDate = new Date(dateStr); // Convert input string to Date object
-    const today = new Date(); // Get current date
-
-    const inputDayOfWeek = inputDate.getDay(); // Get the weekday (0=Sunday, 6=Saturday)
-    const currentWeekStart = new Date(today);
-    currentWeekStart.setDate(today.getDate() - today.getDay()); // Get the Sunday of the current week
-
-    const newDate = new Date(currentWeekStart);
-    newDate.setDate(currentWeekStart.getDate() + inputDayOfWeek); // Adjust to the same weekday in the current week
-
-    return newDate.toISOString().split('T')[0]; // Return as 'YYYY-MM-DD'
-  }
-
-
-
+  //parametres passee a la formulaire
+  resType: 'PENDING' | 'APPROVED' | 'REJECTED' | 'FIXED' = 'FIXED'; 
+  formTitle = 'create reservation'; 
   selectedRoomId: number | null = null;
-  localIds: number[] = [];
-  pending: ReservationList[] = [];
+  //tableau pour contenir les donnees importee de la base de donnees 
   rooms: Room_list[] = [];
   users: User_list[] = [];
-  constructor(private snackBar: MatSnackBar, private roomService: roomlistservice, private userService: UserService, private reservationService: reservationService) { }
+  reservations: ReservationList[] = [];
+  // visibilite du formulaire
+  isVisible: boolean = false;
+  // local visible au lancement de la page
+  defaultRoom: number | undefined;
+  
 
   ngOnInit(): void {
     this.loadUsers();
     this.loadRooms();
     this.loadReservations();
-    this.findPending();
-    this.onRoomChange();
+    this.onRoomChange(); //apporter les changement sur le calendrier
+
   }
 
+// calendar options and updates
+  calendarOptions: CalendarOptions = {
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin], // Plugins utilisés par le calendrier
+    initialView: 'timeGridWeek', // Vue initiale du calendrier (vue hebdomadaire par défaut)
+    height: 'auto', // Hauteur du calendrier (automatique)
+    headerToolbar: {
+      left: 'prev,next today', // Boutons de navigation (précédent, suivant, aujourd'hui)
+      center: 'title', // Titre du calendrier
+      right: 'timeGridWeek,timeGridDay' // Options pour changer entre la vue hebdomadaire et journalière
+    },
+    slotMinTime: '08:00:00', // Heure de début des créneaux horaires
+    slotMaxTime: '18:00:00', // Heure de fin des créneaux horaires
+    allDaySlot: false, // Masquer le créneau "toute la journée"
+    weekends: true, // Afficher les week-ends
+    events: [], // Tableau des événements (sera rempli dynamiquement)
+    eventClick: this.handleEventClick.bind(this), // Gestionnaire de clic sur un événement
+    firstDay: 1, // Le lundi est le premier jour de la semaine
+    selectable: true, // Permettre la sélection de créneaux horaires
+    editable: false, // Désactiver l'édition des événements
+    eventContent: (arg) => {
+      // Contenu personnalisé des événements
+      const person = arg.event.extendedProps['person'] || 'Personne inconnue';
+      return {
+        html: `
+          <div class="custom-event">
+            <h4>${arg.event.title}</h4>
+            <p>Personne: ${person}</p>
+          </div>`
+      };
+    }
+  };
 
-
-
-  loadReservations() {
-    ///add code later for now it's hardcoded
-    this.localIds = this.reservations.map(reservation => reservation.localId);
-    console.log(this.localIds);
+  handleEventClick(info: any) {
+    // Gestionnaire de clic sur un événement du calendrier.
+  
+    const snackBarRef = this.snackBar.open('Voulez-vous supprimer cette réservation ?', 'Supprimer', {
+      duration: 5000, // Durée d'affichage de la notification (5 secondes)
+      horizontalPosition: 'center', // Position horizontale de la notification (centrée)
+      verticalPosition: 'top', // Position verticale de la notification (en haut)
+      panelClass: ['delete-snackbar'] // Classe CSS personnalisée pour la notification
+    });
+  
+    snackBarRef.onAction().subscribe(() => {
+      // S'abonne à l'action "Supprimer" de la notification.
+      this.deleteReservation(parseInt(info.event.id.split("-")[0])); // Appelle la méthode pour supprimer la réservation en utilisant l'ID de l'événement.
+    });
   }
 
-  loadRooms(): void {
-    this.roomService.getRooms().subscribe(
-      (data: Room_list[]) => {
-        this.rooms = data;
-        this.selectedRoomId = data[0].idLocal;
+  onRoomChange() {
+    // Méthode pour mettre à jour le calendrier lors du changement de salle sélectionnée.
+    if (!this.selectedRoomId) return; // Si aucune salle n'est sélectionnée, quitter la méthode.
+  
+    // Filtrer les réservations pour la salle sélectionnée.
+    const roomEvents = this.reservations
+      .filter(res => res.localId === Number(this.selectedRoomId)) // Filtrer par l'ID de la salle sélectionnée.
+      .filter(res => res.status === 'FIXED' || res.status === 'APPROVED') // Filtrer les réservations approuvées ou fixes.
+      .flatMap(reservation => {
+        // Pour chaque réservation filtrée, générer les événements du calendrier.
+        if (reservation.status === 'FIXED') {
+          // Si la réservation est fixe, générer des événements pour la semaine actuelle, 10 semaines à l'avance et 5 semaines en arrière.
+          const events = [];
+          for (let i = -5; i <= 10; i++) {
+            // Boucle de -5 semaines à +10 semaines.
+            const startDate = this.addWeeks(this.convertToCurrentWeek(reservation.date), i); // Calculer la date de début de l'événement.
+            const endDate = this.addWeeks(this.convertToCurrentWeek(reservation.date), i); // Calculer la date de fin de l'événement.
+  
+            events.push({
+              title: this.getTiltle(reservation.status), // Définir le titre de l'événement.
+              start: `${startDate}T${reservation.startTime}`, // Définir la date et l'heure de début de l'événement.
+              end: `${endDate}T${reservation.endTime}`, // Définir la date et l'heure de fin de l'événement.
+              id: `${reservation.id}-${i}`, // ID unique pour chaque événement dupliqué.
+              color: this.getStatusColor(reservation.status), // Définir la couleur de l'événement en fonction du statut de la réservation.
+              extendedProps: {
+                person: (this.users.find(u => u.personneId == reservation.personneId)?.nom || 'unknown') + " " + (this.users.find(u => u.personneId == reservation.personneId)?.prenom || 'unknown') // Ajouter le nom de la personne à l'événement.
+              }
+            });
+          }
+          return events; // Retourner le tableau des événements générés.
+        } else {
+          // Si la réservation n'est pas fixe (par exemple, 'APPROVED'), générer un seul événement.
+          return {
+            title: this.getTiltle(reservation.status), // Définir le titre de l'événement.
+            start: `${reservation.date}T${reservation.startTime}`, // Définir la date et l'heure de début de l'événement.
+            end: `${reservation.date}T${reservation.endTime}`, // Définir la date et l'heure de fin de l'événement.
+            id: reservation.id.toString(), // ID de la réservation.
+            color: this.getStatusColor(reservation.status), // Définir la couleur de l'événement en fonction du statut de la réservation.
+            extendedProps: {
+              person: (this.users.find(u => u.personneId == reservation.personneId)?.nom || 'unknown') + " " + (this.users.find(u => u.personneId == reservation.personneId)?.prenom || 'unknown') // Ajouter le nom de la personne à l'événement.
+            }
+          };
+        }
+      });
+  
+    // Mettre à jour les événements du calendrier.
+    this.calendarOptions.events = roomEvents;
+  
+    if (this.selectedRoomId !== null) {
+      // Si une salle est sélectionnée, définir la salle par défaut.
+      this.defaultRoom = this.selectedRoomId;
+    }
+  }
+
+  closeItem() {
+    // Ferme l'élément (par exemple, un formulaire ou une fenêtre modale).
+    this.isVisible = false; // Masque l'élément en définissant isVisible sur false.
+    // Délai pour permettre aux changements d'être appliqués dans la base de données.
+    setTimeout(() => {
+      this.loadReservations(); // Recharge les réservations après le délai.
+    }, 500); // Délai de 500 millisecondes (0.5 seconde).
+  }
+  
+  // Gestion des réservations
+  deleteReservation(id: number) {
+    // Supprime une réservation en utilisant son ID.
+    this.reservationService.deleteReservation(id).subscribe({
+      next: () => {
+        // Gestion du succès de la suppression.
+        this.snackBar.open('Réservation supprimée avec succès', 'Fermer', {
+          duration: 3000, // Affiche une notification de succès pendant 3 secondes.
+        });
+        // Rafraîchit le calendrier après la suppression.
+        setTimeout(() => {
+          this.loadReservations(); // Recharge les réservations après le délai.
+        }, 500); // Délai de 500 millisecondes (0.5 seconde).
       },
-      (error) => {
-        console.error('Error fetching rooms', error);
+      error: (error) => {
+        // Gestion de l'erreur lors de la suppression.
+        this.snackBar.open('Échec de la suppression de la réservation', 'Fermer', {
+          duration: 3000, // Affiche une notification d'erreur pendant 3 secondes.
+        });
+        console.error('Erreur lors de la suppression de la réservation:', error); // Affiche l'erreur dans la console.
       }
-    );
-  }
-  loadUsers(): void {
-    this.userService.getUsers().subscribe(
-      (data: User_list[]) => {
-        this.users = data;
-
-      },
-      (error) => {
-        console.error('Error fetching users', error);
-      }
-    );
+    });
   }
 
-  findPending() {
-
-    this.pending = this.reservations.filter(res => res.status === 'PENDING');
+  //creating d'une reservation fixe
+  add_reservation_FIXED() {
+    this.loadReservations();
+    this.formTitle = 'creer une reservation fixe';
+    this.resType = 'FIXED';
+    this.isVisible = !this.isVisible;
+    this.loadReservations();
 
   }
-  getUserName(userId: number): string {
-    const user = this.users.find(user => user.personneId == userId);
-    return user?.nom + " " + user?.prenom;
+
+   //creating d'une reservation d'une seule fois
+  add_reservation_APPROVED() {
+    this.loadReservations();
+    this.formTitle = 'creer une reservation ';
+    this.resType = 'APPROVED';
+    this.isVisible = !this.isVisible;
+    this.loadReservations();
+
+
+
   }
 
-  getLocalName(localId: number): string | undefined {
-    const room = this.rooms.find(r => r.idLocal == localId);
-    return room?.nom;
-  }
-
-  isOverlapping(reservation: ReservationList): boolean {
-    return this.reservations.some(other =>
-      other.id !== reservation.id &&  // Exclude itself
-      other.localId === reservation.localId &&  // Same location
-      other.date === reservation.date &&  // Same date
-      this.timesOverlap(reservation, other) // Check time overlap
-    );
-  }
-
-  private timesOverlap(res1: ReservationList, res2: ReservationList): boolean {
-    const res1Start = this.convertToMinutes(res1.startTime);
-    const res1End = this.convertToMinutes(res1.endTime);
-
-    const res2Start = this.convertToMinutes(res2.startTime);
-    const res2End = this.convertToMinutes(res2.endTime);
-
-    console.log(res1Start < res2End && res2Start < res1End);
-    return res1Start < res2End && res2Start < res1End; // Overlapping condition
-  }
-
-  // Convert "HH:MM:SS" time string to total minutes
-  private convertToMinutes(time: string): number {
-    const [hours, minutes] = time.split(':').map(Number);
-    return hours * 60 + minutes;
-  }
-
-  acceptReservation() { }
-  rejectReservation() { }
-
-  // selectLocal(local: number) {
-  //   this.selectedLocal = local;
-  // }
 
 
+//loading
 
+//loading des reservations
+loadReservations() {
+  this.reservationService.getReservations().subscribe(
+    (reservations) => {
+      this.reservations = reservations;
+      this.onRoomChange();
+    },
+    (error) => {
+      console.error('Error fetching reservations:', error);
+    }
+  );
+
+}
+
+//loading des locals
+loadRooms(): void {
+  this.roomService.getRooms().subscribe(
+    (data: Room_list[]) => {
+      this.rooms = data;
+      this.selectedRoomId = data[0].idLocal;
+
+    },
+    (error) => {
+      console.error('Error fetching rooms', error);
+    }
+  );
+}
+
+//loading des utilisateurs
+loadUsers(): void {
+  this.userService.getUsers().subscribe(
+    (data: User_list[]) => {
+      this.users = data;
+
+    },
+    (error) => {
+      console.error('Error fetching users', error);
+    }
+  );
+}
+
+
+// support functions
+
+//ajouter des semainese au reservations fixes
+addWeeks(dateString: string, weeks: number): string {
+  const date = new Date(dateString);
+  date.setDate(date.getDate() + weeks * 7); 
+  return date.toISOString().split('T')[0]; 
+}
+
+//titre des reservations
+private getTiltle(status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'FIXED'): string {
+  const titles = {
+    PENDING: 'En attente d\'approbation de l\'ADMIN',
+    APPROVED: 'Réservation approuvée !',
+    REJECTED: 'Rejeté par l\'ADMIN',
+    FIXED: 'Réservation fixe'
+  };
+  return titles[status];
+}
+
+//couleurs des cartes de reservations
+private getStatusColor(status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'FIXED'): string {
+  const colors = {
+    PENDING: '#FFA500',  
+    APPROVED: '#4CAF50', 
+    REJECTED: '#F44336',  
+    FIXED: '#2a272ed6' 
+  };
+  return colors[status];
+}
+
+//convertir la date des reservations fixes au jour courant
+convertToCurrentWeek(dateStr: string): string {
+  const inputDate = new Date(dateStr); 
+  const today = new Date();
+  const diff = (today.getDay() === 0 ? 7 : today.getDay()) - (inputDate.getDay() === 0 ? 7 : inputDate.getDay());
+  const newDate = new Date()
+  newDate.setDate(today.getDate() - diff);
+
+  return newDate.toISOString().split('T')[0]; 
+}
+
+
+private convertToMinutes(time: string): number {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+}
+
+// detection des reservations qui ont la meme date 
+isOverlapping(reservation: ReservationList): boolean {
+  return this.reservations.some(other =>
+    other.id !== reservation.id &&  
+    other.localId === reservation.localId &&  
+    other.date === reservation.date &&  
+    this.timesOverlap(reservation, other) 
+  );
+}
+
+// detection des reservations qui ont la meme date 
+private timesOverlap(res1: ReservationList, res2: ReservationList): boolean {
+  const res1Start = this.convertToMinutes(res1.startTime);
+  const res1End = this.convertToMinutes(res1.endTime);
+
+  const res2Start = this.convertToMinutes(res2.startTime);
+  const res2End = this.convertToMinutes(res2.endTime);
+
+
+  return res1Start < res2End && res2Start < res1End; 
+}
+
+// produire une notification plus sylee que alert()
+simple_notification(Message: string) {
+  this.snackBar.open(Message, 'Close', {
+    duration: 3000,
+    verticalPosition: 'top',
+    horizontalPosition: 'center'
+  });
+}
 }

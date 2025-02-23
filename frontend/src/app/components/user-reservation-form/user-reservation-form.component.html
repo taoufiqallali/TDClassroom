@@ -1,0 +1,113 @@
+<div class="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-bold mb-4 text-indigo-600">
+        {{ isEditMode ? 'Edit Reservation' : title }}
+    </h2>
+
+    @if (errorMessage) {
+    <div class="mb-4 p-2 bg-red-100 text-red-700 border border-red-200 rounded">
+        {{ errorMessage }}
+    </div>
+    }
+
+    <form (ngSubmit)="onSubmit(reservationForm)" #reservationForm="ngForm" class="space-y-4">
+        <!-- Time Selection Section -->
+        <div class="space-y-4 p-4 bg-gray-50 rounded-lg">
+            <div class="form-group">
+                <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+                <input type="date" id="date" name="date" [(ngModel)]="searchCriteria.date" required #date="ngModel"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                @if (submitted && date.invalid) {
+                <div class="text-sm text-red-600 mt-1">Date is required</div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="startTime" class="block text-sm font-medium text-gray-700">Start Time</label>
+                <input type="time" id="startTime" name="startTime" [(ngModel)]="searchCriteria.startTime" required
+                    #startTime="ngModel"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                @if (submitted && startTime.invalid) {
+                <div class="text-sm text-red-600 mt-1">Start Time is required</div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="endTime" class="block text-sm font-medium text-gray-700">End Time</label>
+                <input type="time" id="endTime" name="endTime" [(ngModel)]="searchCriteria.endTime" required
+                    #endTime="ngModel"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                @if (submitted && endTime.invalid) {
+                <div class="text-sm text-red-600 mt-1">End Time is required</div>
+                }
+            </div>
+
+
+            <!-- Add this inside the form, after the Time Selection Section and before the Room Selection Section -->
+            <div class="space-y-4 p-4 bg-gray-50 rounded-lg">
+                <div class="form-group">
+                    <label for="capacity" class="block text-sm font-medium text-gray-700">Minimum Capacity</label>
+                    <input type="number" id="capacity" name="capacity" [(ngModel)]="searchCriteria.capacity" min="1"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="accessibility" name="accessibility"
+                            [(ngModel)]="searchCriteria.accessibility"
+                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="accessibility" class="ml-2 block text-sm text-gray-700">Accessibility</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="datashow" name="datashow" [(ngModel)]="searchCriteria.datashow"
+                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="datashow" class="ml-2 block text-sm text-gray-700">Data Show</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="ecrantactile" name="ecrantactile"
+                            [(ngModel)]="searchCriteria.ecrantactile"
+                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="ecrantactile" class="ml-2 block text-sm text-gray-700">Écran Tactile</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <button type="button" (click)="fetchAvailableRooms()"
+                [disabled]="!date.valid || !startTime.valid || !endTime.valid"
+                class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-indigo-300">
+                Search Available Rooms
+            </button>
+        </div>
+
+        <!-- Room Selection Section -->
+        @if (showRoomSelection && rooms.length > 0) {
+        <div class="form-group mt-6">
+            <label for="room" class="block text-sm font-medium text-gray-700">Available Rooms</label>
+            <select id="room" name="room" [(ngModel)]="currReservation.localId" required #room="ngModel"
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">Select a Room</option>
+                @for (room of rooms; track room.idLocal) {
+                <option [value]="room.idLocal">{{ room.nom }}</option>
+                }
+            </select>
+            @if (submitted && room.invalid) {
+            <div class="text-sm text-red-600 mt-1">Room selection is required</div>
+            }
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions flex space-x-4">
+            <button type="submit"
+                class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                {{ isEditMode ? 'Update' : 'Create' }}
+            </button>
+            <button type="button" (click)="resetForm()"
+                class="flex-1 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                Reset
+            </button>
+        </div>
+        }
+    </form>
+</div>

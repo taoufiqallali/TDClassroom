@@ -66,9 +66,6 @@ export class UserCreateService {
       },
       roles:[
         {
-          "roleId": 1
-        },
-        {
           "roleId": 2
         }
       ]
@@ -80,18 +77,7 @@ export class UserCreateService {
 
   // Method to update an existing user
   updateUser(userId: number, user: User): Observable<string> {
-    // Map roles to role IDs
-    // const roles = user.roles.map(role => {
-    //   if (role === 'ADMIN') {
-    //     return { roleId: 1 };
-    //   } else if (role === 'PERSONNE') {
-    //     return { roleId: 2 };
-    //   } else {
-    //     throw new Error(`Invalid role: ${role}`);
-    //   }
-    // });
 
-    // Construct the payload
     const payload = {
       nom: user.nom,
       prenom: user.prenom,
@@ -111,9 +97,6 @@ export class UserCreateService {
         "idUnite": 1
       },
       roles:[
-        {
-          "roleId": 1
-        },
         {
           "roleId": 2
         }

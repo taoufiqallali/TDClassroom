@@ -1,52 +1,44 @@
-import { Component, Input, OnInit,EventEmitter, Output  } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserCreateService } from '../../services/user_create.service';
 
-
-interface User{
-  personneId: number;     // Corresponds to `personneId` in the backend
-  nom: string;            // Corresponds to `nom`
-  prenom: string;         // Corresponds to `prenom`
-  dateNaissance: string;  // Corresponds to `dateNaissance` (converted to string in frontend)
-  email: string;          // Corresponds to `email`
-  cin: string;            // Corresponds to `CIN`
-  tel: string;            // Corresponds to `tel`
-  grade: string;          // Corresponds to `grade` (which is an enum in backend but a string in frontend)
-  address: string;        // Corresponds to `address`
-  ville: string;          // Corresponds to `ville`
-  codePostale: string;    // Corresponds to `codePostale`
-  responsabilite: string; // Corresponds to `responsabilite` (which is an enum in backend but a string in frontend)
-  nomBanque: string;      // Corresponds to `nomBanque`
-  som: string;            // Corresponds to `som`
-  motDePasse: string;     // Corresponds to `motDePasse`
-  uniteOrganisation: any; // Corresponds to `uniteOrganisation`, could be an object or a simple type depending on your use case
-  roles: any[];           // Corresponds to the roles in the `Personne_role` join table, an array of roles
+// Interface représentant un utilisateur
+interface User {
+  personneId: number;     // Correspond à `personneId` dans le backend
+  nom: string;            // Correspond à `nom`
+  prenom: string;         // Correspond à `prenom`
+  dateNaissance: string;  // Correspond à `dateNaissance` (converti en string dans le frontend)
+  email: string;          // Correspond à `email`
+  cin: string;            // Correspond à `CIN`
+  tel: string;            // Correspond à `tel`
+  grade: string;          // Correspond à `grade` (enum dans le backend, string dans le frontend)
+  address: string;        // Correspond à `address`
+  ville: string;          // Correspond à `ville`
+  codePostale: string;    // Correspond à `codePostale`
+  responsabilite: string; // Correspond à `responsabilite` (enum dans le backend, string dans le frontend)
+  nomBanque: string;      // Correspond à `nomBanque`
+  som: string;            // Correspond à `som`
+  motDePasse: string;     // Correspond à `motDePasse`
+  uniteOrganisation: any; // Correspond à `uniteOrganisation` (peut être un objet ou un type simple)
+  roles: any[];           // Correspond aux rôles dans la table `Personne_role`, un tableau de rôles
 }
+
 @Component({
   selector: 'app-user-form',
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.css']
+  styleUrls: ['./user-form.component.css'],
 })
 export class UserFormComponent implements OnInit {
+  // Propriétés d'entrée et de sortie
+  @Input() userId?: string; // ID de l'utilisateur pour le mode édition
+  @Output() triggercloseItem = new EventEmitter<void>(); // Événement pour fermer le formulaire
+  @Output() triggersimple_notification = new EventEmitter<string>(); // Événement pour afficher une notification
 
-  @Input() userId?: String;
-  @Output() triggercloseItem = new EventEmitter<void>();
-  @Output() triggersimple_notification = new EventEmitter<string>();
-
-  self_close() {
-    this.triggercloseItem.emit(); // Emit event when called
-  }
-
-  simple_notification(message:string){
-
-    this.triggersimple_notification.emit(message);
-
-  }
-
+  // Propriétés du composant
   user: User = {
     personneId: 0,
     nom: '',
@@ -64,98 +56,100 @@ export class UserFormComponent implements OnInit {
     som: '',
     motDePasse: '',
     uniteOrganisation: '',
-    roles: []
+    roles: [],
   };
 
-  isEditMode = false;
-  submitted = false;
-  errorMessage = '';
+  isEditMode = false; // Mode édition ou création
+  submitted = false; // Indique si le formulaire a été soumis
+  errorMessage = ''; // Message d'erreur en cas d'échec
 
-  constructor(private http: HttpClient,private userCreateService: UserCreateService) {}
+  // Listes pour les menus déroulants
+  grades = ['professeur', 'ingenieur', 'technicien'];
+  responsabilites = ['administrateur', 'chef', 'adjoint', 'directeur'];
 
+  constructor(private http: HttpClient, private userCreateService: UserCreateService) {}
+
+  // Méthodes du cycle de vie Angular
   ngOnInit() {
-
     if (this.userId) {
-      this.isEditMode = true;
-      this.loadUser();
+      this.isEditMode = true; // Activer le mode édition si un ID est fourni
+      this.loadUser(); // Charger les données de l'utilisateur
     }
   }
 
+  // Méthodes pour gérer les événements
+  self_close() {
+    this.triggercloseItem.emit(); // Fermer le formulaire
+  }
+
+  simple_notification(message: string) {
+    this.triggersimple_notification.emit(message); // Afficher une notification
+  }
+
+  // Méthodes pour charger et formater les données
   loadUser() {
-   
-    this.http.get<User>(`http://localhost:8080/api/personnes/email/${this.userId}`)
-      .subscribe({
-        next: (data) => {
-          this.user = {
-            ...data,
-            dateNaissance: this.formatDateForInput(data.dateNaissance), // Format the dat
-            motDePasse:''
-          };
-        },
-        error: (error) => {
-          console.error('Error loading user:', error);
-          this.errorMessage = 'Failed to load user data';
-        }
-      });
-
-
+    this.http.get<User>(`http://localhost:8080/api/personnes/email/${this.userId}`).subscribe({
+      next: (data) => {
+        this.user = {
+          ...data,
+          dateNaissance: this.formatDateForInput(data.dateNaissance), // Formater la date
+          motDePasse: '', // Réinitialiser le mot de passe
+        };
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement de l\'utilisateur:', error);
+        this.errorMessage = 'Échec du chargement des données de l\'utilisateur';
+      },
+    });
   }
 
   formatDateForInput(dateString: string): string {
-    if (!dateString) return ''; // Handle empty dates
+    if (!dateString) return ''; // Gérer les dates vides
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // Extract YYYY-MM-DD
+    return date.toISOString().split('T')[0]; // Extraire YYYY-MM-DD
   }
 
-
+  // Méthodes pour gérer la soumission du formulaire
   onSubmit() {
     this.submitted = true;
     this.errorMessage = '';
 
     if (this.isEditMode) {
-      this.updateUser();
+      this.updateUser(); // Mettre à jour l'utilisateur en mode édition
     } else {
-      this.createUser();
+      this.createUser(); // Créer un nouvel utilisateur en mode création
     }
-
-
-
   }
 
   private createUser() {
     this.userCreateService.createUser(this.user).subscribe({
       next: (message) => {
-        console.log('User created successfully:', message);
-        // Handle success (e.g., show a success message or redirect)
-        this.simple_notification(`user created successfully! ✅`);
-        this.self_close();
+        console.log('Utilisateur créé avec succès:', message);
+        this.simple_notification(`Utilisateur créé avec succès ! ✅`);
+        this.self_close(); // Fermer le formulaire après la création
       },
       error: (err) => {
-        console.error('Failed to create user:', err);
-        // Handle error (e.g., show an error message)
-        this.simple_notification(`❌ Error creating user. Please try again.`);
-        
-      }
+        console.error('Échec de la création de l\'utilisateur:', err);
+        this.simple_notification(`❌ Erreur lors de la création de l'utilisateur. Veuillez réessayer.`);
+      },
     });
   }
 
   private updateUser() {
-    this.userCreateService.updateUser(this.user.personneId,this.user).subscribe({
+    this.userCreateService.updateUser(this.user.personneId, this.user).subscribe({
       next: (message) => {
-        console.log('User updated successfully:', message);
-        // Handle success (e.g., show a success message or redirect)
-        this.simple_notification(`user updated successfully! ✅`);
-        this.self_close();
+        console.log('Utilisateur mis à jour avec succès:', message);
+        this.simple_notification(`Utilisateur mis à jour avec succès ! ✅`);
+        this.self_close(); // Fermer le formulaire après la mise à jour
       },
       error: (err) => {
-        console.error('Failed to update user:', err);
-        // Handle error (e.g., show an error message)
-        this.simple_notification(`❌ updating user. Please try again.`);
-      }
+        console.error('Échec de la mise à jour de l\'utilisateur:', err);
+        this.simple_notification(`❌ Erreur lors de la mise à jour de l'utilisateur. Veuillez réessayer.`);
+      },
     });
-    
   }
 
+  // Méthodes pour réinitialiser le formulaire
   resetForm() {
     this.user = {
       personneId: 0,
@@ -174,30 +168,8 @@ export class UserFormComponent implements OnInit {
       som: '',
       motDePasse: '',
       uniteOrganisation: '',
-      roles: []
+      roles: [],
     };
     this.submitted = false;
   }
-
-  // Available grades for dropdown
-  grades = [    'professeur',
-    'ingenieur',
-    'technicien'];
-  responsabilites=[    'administrateur',
-      'chef',
-      'adjoint',
-      'directeur'];
-  availableRoles = ['ADMIN', 'PERSONNE'];
-  uniteOrganisations=[  'fso',
-    'informatique',
-    'mathematique',
-    'physique',
-    'chimie',
-    'biologie',
-    'geologie'];
-
-
-    
-
 }
-

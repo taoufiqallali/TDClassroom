@@ -7,34 +7,34 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-room-list',
+
   imports: [CommonModule, RoomFormComponent, FormsModule],
+
+
   templateUrl: './room-list.component.html',
-  styleUrl: './room-list.component.css'
+  styleUrl: './room-list.component.css',
 })
 export class RoomListComponent implements OnInit {
-  constructor(private snackBar: MatSnackBar, private roomService: roomlistservice) {}
 
-  isVisible: boolean = false;
-  operation_type = 0;
-  rooms: Room_list[] = [];
-  selectedTabIndex: string = 'fso';
-  roomid = '';
-  groupedData: Room_list[] = [];
-  unitelist: string[] = [];
+  constructor(private snackBar: MatSnackBar, private roomService: roomlistservice) {}
+  // Propriétés du composant
+  isVisible: boolean = false; // Contrôle la visibilité du formulaire
+  operation_type = 0; // Type d'opération (0: ajout, 1: édition)
+  rooms: Room_list[] = []; // Liste des salles
+  selectedTabIndex: string = 'fso'; // Onglet sélectionné par défaut
+  roomid = ''; // ID de la salle sélectionnée
+  groupedData: Room_list[] = []; // Données groupées (non utilisé actuellement)
+  unitelist: string[] = []; // Liste des unités (non utilisé actuellement)
   searchQuery: string = '';
 
   selectTab(index: string): void {
     this.selectedTabIndex = index;
   }
 
-  close_form() {
-    this.roomid = '';
-    this.operation_type = 0;
-    this.isVisible = false;
-    this.loadRooms();
-  }
+ 
 
-  add_room() {
+  add_room(): void {
+    // Affiche le formulaire pour ajouter une nouvelle salle
     this.roomid = '';
     this.operation_type = 0;
     this.isVisible = !this.isVisible;
@@ -49,16 +49,17 @@ export class RoomListComponent implements OnInit {
     this.loadRooms();
   }
 
-  delete_room(room: any) {
+  delete_room(room: any): void {
+    // Supprime une salle via le service
     this.roomService.deleteRoom(room).subscribe(
       (response) => {
-        console.log('Room deleted:', response);
-        this.simple_notification(`Room deleted! ✅`);
+        console.log('Salle supprimée:', response);
+        this.simple_notification(`Salle supprimée ! ✅`);
         this.loadRooms();
       },
       (error) => {
-        console.error('Error deleting room:', error);
-        this.simple_notification(`Error deleting room ❌`);
+        console.error('Erreur lors de la suppression de la salle:', error);
+        this.simple_notification(`Erreur lors de la suppression de la salle ❌`);
         this.loadRooms();
       }
     );
@@ -73,7 +74,6 @@ export class RoomListComponent implements OnInit {
       (data: Room_list[]) => {
         this.rooms = data;
         this.filterRooms();
-        this.unitelist = [...new Set(data.map(item => item.uniteOrganisationNom))];
       },
       (error) => {
         console.error('Error fetching rooms', error);
@@ -113,11 +113,19 @@ export class RoomListComponent implements OnInit {
     });
 
     snackBarRef.onAction().subscribe(() => {
-      this.delete_room(room);
+      this.delete_room(room); // Supprime la salle si l'utilisateur confirme
     });
 
     snackBarRef.afterDismissed().subscribe(() => {
       console.log('Room deletion prompt dismissed');
     });
+  }
+
+  close_form(): void {
+    // Ferme le formulaire et recharge la liste des salles
+    this.roomid = '';
+    this.operation_type = 0;
+    this.isVisible = false;
+    this.loadRooms();
   }
 }

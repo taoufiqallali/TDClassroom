@@ -2,9 +2,11 @@ import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { roomlistservice } from '../../services/room-list.service';
+import { Room_list, roomlistservice } from '../../services/room-list.service';
 
-// Updated Room interface to include new fields
+
+// Interface pour définir la structure d'une salle
+
 interface Room {
   idLocal: number;
   nom: string;
@@ -13,6 +15,7 @@ interface Room {
   uniteOrganisationNom: string;
   datashow: boolean; // New field
   ecranTactile: boolean; // New field
+
 }
 
 @Component({
@@ -22,8 +25,12 @@ interface Room {
   templateUrl: './room-form.component.html',
   styleUrl: './room-form.component.css'
 })
-export class RoomFormComponent implements OnInit {
-  @Input() roomid?: string; // Ensure roomid is a string
+export class RoomFormComponent {
+  @Input() roomid?: string; // ID de la salle (pour le mode édition)
+  @Output() triggercloseItem = new EventEmitter<void>(); // Événement pour fermer le formulaire
+  @Output() triggersimple_notification = new EventEmitter<string>(); // Événement pour les notifications
+
+  // Objet représentant une salle
   room: Room = {
     idLocal: 0,
     nom: '',
@@ -34,14 +41,22 @@ export class RoomFormComponent implements OnInit {
     ecranTactile: false // Default value for ecranTactile
   };
 
+  submitted_room:Room_list ={
+    idLocal: 0,
+    nom: '',
+    capacite: 0,
+    accessibilitePmr: 'false', // Default value for boolean fields
+    datashow: 'false', // Default value for datashow
+    ecranTactile: 'false' // Default value for ecranTactile
+
+  }
+
   isEditMode = false;
   submitted = false;
   errorMessage = '';
 
   constructor(private http: HttpClient, private roomlistservice: roomlistservice) {}
 
-  @Output() triggercloseItem = new EventEmitter<void>();
-  @Output() triggersimple_notification = new EventEmitter<string>();
 
   self_close() {
     this.triggercloseItem.emit(); // Emit event when called
@@ -75,6 +90,12 @@ export class RoomFormComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
     this.errorMessage = '';
+    this.submitted_room.capacite=this.room.capacite;
+    this.submitted_room.idLocal=this.room.idLocal;
+    this.submitted_room.nom=this.room.nom;
+    this.submitted_room.accessibilitePmr=this.room.accessibilitePmr.toString();
+    this.submitted_room.datashow=this.room.datashow.toString();
+    this.submitted_room.ecranTactile=this.room.ecranTactile.toString();
     if (this.isEditMode) {
       this.updateRoom();
     } else {
@@ -83,7 +104,7 @@ export class RoomFormComponent implements OnInit {
   }
 
   updateRoom() {
-    this.roomlistservice.updateRoom(this.room.idLocal, this.room).subscribe({
+    this.roomlistservice.updateRoom(this.room.idLocal, this.submitted_room).subscribe({
       next: (message) => {
         console.log('Room updated successfully:', message);
         this.simple_notification(`Room updated successfully! ✅`);
@@ -97,7 +118,7 @@ export class RoomFormComponent implements OnInit {
   }
 
   createRoom() {
-    this.roomlistservice.createRoom(this.room).subscribe({
+    this.roomlistservice.createRoom(this.submitted_room).subscribe({
       next: (message) => {
         console.log('Room created successfully:', message);
         this.simple_notification(`Room created successfully! ✅`);
