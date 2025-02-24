@@ -129,6 +129,7 @@ export class ManageUserComponent implements OnInit {
       (data: User[]) => {
         // Filtre les utilisateurs pour exclure les administrateurs
         this.users = data.filter(u => !u.roles.includes('ADMIN'));
+        this.groupedData = this.users;
       },
       (error) => {
         console.error('Erreur lors de la récupération des utilisateurs', error);
