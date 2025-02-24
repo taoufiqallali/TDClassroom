@@ -30,28 +30,19 @@ export class roomlistservice{
         nom: Roomdata.nom,
         capacite: Roomdata.capacite,
         accessibilitePmr: Roomdata.accessibilitePmr,
+        datashow:Roomdata.datashow,
+        ecranTactile:Roomdata.ecranTactile,
         uniteOrganisation: {"idUnite": 1}
             }
     return this.http.put(this.apiUrl+"/"+idLocal,payload,{responseType: 'text'});
   }
 createRoom(Roomdata:Room_list){
-
-// Map roles to role IDs
-    // const roles = user.roles.map(role => {
-    //   if (role === 'ADMIN') {
-    //     return { roleId: 1 };
-    //   } else if (role === 'PERSONNE') {
-    //     return { roleId: 2 };
-    //   } else {
-    //     throw new Error(`Invalid role: ${role}`);
-    //   }
-    // });
-
-    // Construct the payload
     const payload = {
       nom: Roomdata.nom,
         capacite: Roomdata.capacite,
         accessibilitePmr: Roomdata.accessibilitePmr,
+        datashow:Roomdata.datashow,
+        ecranTactile:Roomdata.ecranTactile,
         uniteOrganisation: {"idUnite": 1}
     };
     console.log("Payload before sending:", JSON.stringify(payload, null, 2));

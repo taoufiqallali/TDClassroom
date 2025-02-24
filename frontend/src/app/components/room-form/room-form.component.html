@@ -56,21 +56,6 @@
       }
     </div>
 
-    <!-- Unité d'Organisation Field -->
-    <div class="form-group">
-      <label for="uniteOrganisation">Unité d'Organisation</label>
-      <input 
-        type="text" 
-        id="uniteOrganisation" 
-        name="uniteOrganisation" 
-        [(ngModel)]="room.uniteOrganisationNom" 
-        required
-        #uniteOrganisation="ngModel"
-        class="form-control">
-      @if (submitted && uniteOrganisation.invalid) {
-        <div class="error">Unité d'Organisation is required</div>
-      }
-    </div>
 
     <!-- DataShow Field -->
     <div class="form-group">

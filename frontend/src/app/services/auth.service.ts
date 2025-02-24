@@ -34,7 +34,7 @@ export class AuthService {
     if (response.role === 'ROLE_ADMIN') {
       this.router.navigate(['/admin-dash/dashboard']); // Redirect to admin dashboard
     } else {
-      this.router.navigate(['/user-dash']); // Redirect to user dashboard
+      this.router.navigate(['/user-dash/dashboard']); // Redirect to user dashboard
     }
   }
 

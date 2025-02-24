@@ -9,7 +9,16 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
   constructor(private authService: AuthService, private router: Router) {}
-
+  username: string = '';
+  ngOnInit() {
+    const currentUserString = localStorage.getItem('currentUser');
+    if (currentUserString) {
+      const currentUser = JSON.parse(currentUserString);
+      if (currentUser && currentUser.username) {
+        this.username = currentUser.username;
+      } 
+    } 
+  }
   logout() {
     this.authService.logout();
   }

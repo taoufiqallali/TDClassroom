@@ -21,6 +21,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 })
 export class UserReservationComponent {
 
+
   // Constructeur du composant
   constructor(
     private snackBar: MatSnackBar, // Service pour afficher des notifications (snackbar)
@@ -39,10 +40,17 @@ export class UserReservationComponent {
   isVisible: boolean = false; // Contrôle la visibilité du formulaire de réservation
   defaultRoom: number | undefined; // ID de la salle par défaut (peut être undefined)
   reservations: ReservationList[] = []; // Liste des réservations
-
+  username:string|undefined;
 
   ngOnInit(): void {
-    this.userId = 2; // -------------------------------- to be loaded from main element
+    const currentUserString = localStorage.getItem('currentUser');
+    if (currentUserString) {
+      const currentUser = JSON.parse(currentUserString);
+      if (currentUser && currentUser.username) {
+        this.username = currentUser.username;
+      } 
+    } 
+
     this.loadUsers();
     this.loadRooms();
     this.loadReservations();
@@ -93,8 +101,8 @@ export class UserReservationComponent {
   };
 
   // Gestion du clic sur un événement du calendrier
-  
-  handleEventClick(info: any){
+
+  handleEventClick(info: any) {
     if (info.event.title === 'fixed reservation') {
       // Si l'événement est une réservation fixe
       this.simple_notification('Réservation fixe'); // Afficher une notification
@@ -117,7 +125,7 @@ export class UserReservationComponent {
   onRoomChange() {
     // Si aucune salle n'est sélectionnée, on quitte la fonction
     if (!this.selectedRoomId) return;
-  
+
     // Filtrer les réservations pour la salle sélectionnée
     const roomEvents = this.reservations
       .flatMap(reservation => {
@@ -128,7 +136,7 @@ export class UserReservationComponent {
             // Calculer les dates de début et de fin pour chaque semaine
             const startDate = this.addWeeks(this.convertToCurrentWeek(reservation.date), i);
             const endDate = this.addWeeks(this.convertToCurrentWeek(reservation.date), i);
-  
+
             // Ajouter l'événement à la liste
             events.push({
               title: this.getTiltle(reservation.status), // Titre de l'événement basé sur le statut
@@ -158,98 +166,99 @@ export class UserReservationComponent {
           };
         }
       });
-  
+
     // Mettre à jour les événements du calendrier
     this.calendarOptions.events = roomEvents;
-  
+
     // Si une salle est sélectionnée, la définir comme salle par défaut
     if (this.selectedRoomId !== null) {
       this.defaultRoom = this.selectedRoomId;
     }
   }
 
-// Gestion des réservations
+  // Gestion des réservations
 
-// Supprimer une réservation
-deleteReservation(id: number) {
-  this.reservationService.deleteReservation(id).subscribe({
-    next: () => {
-      // Gestion de la réussite
-      this.snackBar.open('Réservation supprimée avec succès', 'Fermer', {
-        duration: 3000, // Notification affichée pendant 3 secondes
-      });
+  // Supprimer une réservation
+  deleteReservation(id: number) {
+    this.reservationService.deleteReservation(id).subscribe({
+      next: () => {
+        // Gestion de la réussite
+        this.snackBar.open('Réservation supprimée avec succès', 'Fermer', {
+          duration: 3000, // Notification affichée pendant 3 secondes
+        });
 
-      // Recharger les réservations après un délai de 500 ms
-      setTimeout(() => {
-        this.loadReservations();
-      }, 500);
-    },
-    error: (error) => {
-      // Gestion des erreurs
-      this.snackBar.open('Échec de la suppression de la réservation', 'Fermer', {
-        duration: 3000, // Notification affichée pendant 3 secondes
-      });
-      console.error('Erreur lors de la suppression de la réservation :', error);
-    }
-  });
-}
+        // Recharger les réservations après un délai de 500 ms
+        setTimeout(() => {
+          this.loadReservations();
+        }, 500);
+      },
+      error: (error) => {
+        // Gestion des erreurs
+        this.snackBar.open('Échec de la suppression de la réservation', 'Fermer', {
+          duration: 3000, // Notification affichée pendant 3 secondes
+        });
+        console.error('Erreur lors de la suppression de la réservation :', error);
+      }
+    });
+  }
 
-// Ajouter une réservation en statut "PENDING"
-add_reservation_PENDING() {
-  this.loadReservations(); // Recharger les réservations
-  this.formTitle = 'create pending reservation'; // Définir le titre du formulaire
-  this.resType = 'PENDING'; // Définir le type de réservation à "PENDING"
-  this.isVisible = !this.isVisible; // Basculer la visibilité du formulaire
-  this.loadReservations(); // Recharger les réservations à nouveau
-}
+  // Ajouter une réservation en statut "PENDING"
+  add_reservation_PENDING() {
+    this.loadReservations(); // Recharger les réservations
+    this.formTitle = 'create pending reservation'; // Définir le titre du formulaire
+    this.resType = 'PENDING'; // Définir le type de réservation à "PENDING"
+    this.isVisible = !this.isVisible; // Basculer la visibilité du formulaire
+    this.loadReservations(); // Recharger les réservations à nouveau
+  }
 
-// Chargement des données
+  // Chargement des données
 
-// Charger les réservations
-loadReservations() {
-  this.reservationService.getReservations().subscribe(
-    (reservations) => {
-      // Filtrer les réservations pour ne garder que celles de l'utilisateur actuel
-      this.reservations = reservations.filter(r => r.personneId == this.userId);
-      // Mettre à jour les événements du calendrier en fonction de la salle sélectionnée
-      this.onRoomChange();
-    },
-    (error) => {
-      // Gestion des erreurs en cas d'échec du chargement des réservations
-      console.error('Erreur lors du chargement des réservations :', error);
-    }
-  );
-}
+  // Charger les réservations
+  loadReservations() {
+    this.reservationService.getReservations().subscribe(
+      (reservations) => {
+        // Filtrer les réservations pour ne garder que celles de l'utilisateur actuel
+        this.reservations = reservations.filter(r => r.personneId == this.userId);
+        // Mettre à jour les événements du calendrier en fonction de la salle sélectionnée
+        this.onRoomChange();
+      },
+      (error) => {
+        // Gestion des erreurs en cas d'échec du chargement des réservations
+        console.error('Erreur lors du chargement des réservations :', error);
+      }
+    );
+  }
 
-// Charger les salles
-loadRooms(): void {
-  this.roomService.getRooms().subscribe(
-    (data: Room_list[]) => {
-      // Mettre à jour la liste des salles disponibles
-      this.rooms = data;
-      // Sélectionner la première salle par défaut
-      this.selectedRoomId = data[0].idLocal;
-    },
-    (error) => {
-      // Gestion des erreurs en cas d'échec du chargement des salles
-      console.error('Erreur lors du chargement des salles :', error);
-    }
-  );
-}
+  // Charger les salles
+  loadRooms(): void {
+    this.roomService.getRooms().subscribe(
+      (data: Room_list[]) => {
+        // Mettre à jour la liste des salles disponibles
+        this.rooms = data;
+        // Sélectionner la première salle par défaut
+        this.selectedRoomId = data[0].idLocal;
+      },
+      (error) => {
+        // Gestion des erreurs en cas d'échec du chargement des salles
+        console.error('Erreur lors du chargement des salles :', error);
+      }
+    );
+  }
 
-// Charger les utilisateurs
-loadUsers(): void {
-  this.userService.getUsers().subscribe(
-    (data: User_list[]) => {
-      // Mettre à jour la liste des utilisateurs disponibles
-      this.users = data;
-    },
-    (error) => {
-      // Gestion des erreurs en cas d'échec du chargement des utilisateurs
-      console.error('Erreur lors du chargement des utilisateurs :', error);
-    }
-  );
-}
+  // Charger les utilisateurs
+  loadUsers(): void {
+    this.userService.getUsers().subscribe(
+      (data: User_list[]) => {
+        // Mettre à jour la liste des utilisateurs disponibles
+        this.users = data;
+        this.userId=this.users.find(u => u.email === this.username)?.personneId;
+      },
+      (error) => {
+        // Gestion des erreurs en cas d'échec du chargement des utilisateurs
+        console.error('Erreur lors du chargement des utilisateurs :', error);
+      }
+    );
+  }
 
   //supporting functions
   simple_notification(Message: string) {

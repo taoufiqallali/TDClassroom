@@ -17,7 +17,7 @@ export class UserSidebarComponent implements OnInit {
 
   navItems = [
     { name: 'Dashboard', path: 'dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { name: 'Reservations', path: 'my-reservations', icon: 'M8 7V3m8 4V3m-9 8h10m-10 4h6m-9 8h18a2 2 0 002-2V5a2 2 0 00-2 2H3a2 2 0 00-2 2v14a2 2 0 002 2z' },
+    { name: 'Reservations', path: 'reservations', icon: 'M8 7V3m8 4V3m-9 8h10m-10 4h6m-9 8h18a2 2 0 002-2V5a2 2 0 00-2 2H3a2 2 0 00-2 2v14a2 2 0 002 2z' },
   ];
 
   constructor(private router: Router) {
