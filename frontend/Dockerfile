@@ -14,6 +14,8 @@ RUN npm install -g @angular/cli
 #workaround to be able to work with tailwind
 RUN find node_modules -path '*/needle/test/files/*' -delete
 
+# install chart and fullcalendar
+RUN npm install chart.js @fullcalendar/core @fullcalendar/angular @fullcalendar/daygrid @fullcalendar/interaction
 
 # Copy project files
 COPY . .
